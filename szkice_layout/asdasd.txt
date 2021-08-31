@@ -1,0 +1,3 @@
+chce mieć sidebar który przy 
+ekranie większym niż lg jest wyświetlany jako pasek
+a przy mniejszym ekranie niż lg jest wyświetlany po wciśnięciu przycisku toggle
