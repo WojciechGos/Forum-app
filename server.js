@@ -1,22 +1,41 @@
+if(process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
+
+
 const express = require('express');
 const app = express();
 const loginRouter = require('./routes/LoginRouter');
 const registerRouter = require('./routes/RegisterRouter');
-const mongoose = require('mongoose');
+const passport = require('passport');
+const flash = require('express-flash')
+const session = require('express-session');
+const MongoStore = require('connect-mongo')
 
-mongoose.connect('mongodb://localhost/forum').then(()=>{
-    console.log('connected');
-    app.listen(5000);
-    
-}).catch((err)=>{
-    console.error(err);
+require('./config/database').connection
+
+const sessionStore = MongoStore.create({
+    mongoUrl: process.env.DB_URL
 })
+
 
 app.set('view engine', 'ejs');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-
+app.use(flash());
+app.use(session({
+    secret: process.env.SECRET,
+    store: sessionStore,
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+        maxAge: 1000*60*60*24 // 24h
+    }   
+}))
+require('./config/passport')
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(express.static('views'));
 app.use(express.static('views/Register'));
@@ -30,3 +49,4 @@ app.get('/', (req, res)=>{
     res.render('index');
 });
 
+app.listen(5000)

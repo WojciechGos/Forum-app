@@ -1,21 +1,23 @@
 const User = require('../model/User')
-const mongoose = require('mongoose')
+const bcrypt = require('bcrypt');
 
 function registerGet(req, res){
     res.render('register/register');
 }
 
 async function createUser(req, res){
-    let user = new User({
-        name : req.body.login,
-        password : req.body.password,
-        joiningDate: Date.now()
-    });
     try{
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        let user = new User({
+            name : req.body.login,
+            password : hashedPassword,
+            joiningDate: Date.now()
+        });
+        console.log(user);
         user = await user.save();
         res.redirect('/');
     }catch(err){
-        console.log(err);
+        console.error(err);
     }
 } 
 
@@ -26,7 +28,7 @@ async function registerPost(req, res){
 
         if(user === null){
             console.log('creating user')
-            // createUser(req, res);
+            createUser(req, res);
         }else{
             console.log("User Exist");
         }

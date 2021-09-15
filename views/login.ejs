@@ -10,15 +10,18 @@
 <body>
     <%- include('navbar_logout') %> 
     <div class="container">
-        <form>
+        <% if(messages.error){ %>
+            <%= messages.error %> 
+        <% } %>
+        <form method="POST" action="/Login">
             <div class="mb-3">
-                <label for="Login" class="form-label">Login</label>
-                <input type="text" class="form-control" id="inputLogin">
+                <label for="UserName" class="form-label">User Name</label>
+                <input type="text" class="form-control" id="inputUserName" name="username">
             
             </div>
             <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1">
+                <input type="password" class="form-control" id="exampleInputPassword1" name="password">
             </div>
             <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="exampleCheck1">
