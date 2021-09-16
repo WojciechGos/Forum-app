@@ -1,0 +1,5 @@
+.article-sidebar-wrapper{
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+}
