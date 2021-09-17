@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const {profileGetLoggedUser, profileGetByUserName } = require('../controllers/ProfileController')
+const {profileGet, profilePost, profilePut } = require('../controllers/ProfileController')
+const upload = require('../config/multer').upload
 
-router.get('/profile', profileGetLoggedUser)
+router.get('/profil/:username',  profileGet)
+router.post('/profil/:username',upload.single('avatar') ,  profilePost)
+router.put('/profil/:username', profilePut)
 
-// look for how to find user by username
-router.get('/profile/:id', profileGetByUserName)
+
 
 module.exports = router

@@ -29,13 +29,14 @@ async function registerPost(req, res){
         if(user === null){
             console.log('creating user')
             createUser(req, res);
+            res.redirect('/')
         }else{
             console.log("User Exist");
         }
     }catch(err){
         console.error(err);
     }
-
+   
    
 }
 

@@ -2,9 +2,26 @@ const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
 const postSchema = new Schema({
-    title: String,
-    user: String,
-    thread: String,
-    date: Date,
-    content: String
+    title: {
+        type: String,
+        required:true
+    },
+    userId:{
+        type: mongoose.Types.ObjectId,
+        required: true
+    },
+    thread: {
+        type: mongoose.Types.ObjectId,
+        required: true
+    },
+    date:{
+        type: Date,
+        default: Date.now()
+    },
+    content: {
+        type: String,
+        required:true
+    },
+    comment: Array
+
 });

@@ -5,12 +5,12 @@ if(process.env.NODE_ENV !== 'production') {
 
 const express = require('express');
 const app = express();
-const loginRouter = require('./routes/LoginRouter');
-const registerRouter = require('./routes/RegisterRouter');
+
 const passport = require('passport');
 const flash = require('express-flash')
 const session = require('express-session');
 const MongoStore = require('connect-mongo')
+const methodOverride = require('method-override')
 
 require('./config/database').connection
 
@@ -23,6 +23,7 @@ app.set('view engine', 'ejs');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+app.use(methodOverride('_method'))
 app.use(flash());
 app.use(session({
     secret: process.env.SECRET,
@@ -41,12 +42,20 @@ app.use(express.static('views'));
 app.use(express.static('views/Register'));
 
 // routes
-app.use(loginRouter);
-app.use(registerRouter);
+const loginRouter = require('./routes/LoginRouter');
+const registerRouter = require('./routes/RegisterRouter');
+const homePageRouter = require('./routes/HomePageRouter')
+const profileRouter = require('./routes/ProfileRouter')
 
 
-app.get('/', (req, res)=>{
-    res.render('index');
+app.use(loginRouter)
+app.use(registerRouter)
+app.use(homePageRouter)
+app.use(profileRouter)
+
+app.get('/logout', (req, res)=>{
+    req.logOut()
+    res.redirect('/')
 });
 
 app.listen(5000)

@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container-fluid">
+        <a href="/" class="navbar-brand">Forum</a>
+
+    
+        <button class="navbar-toggler" 
+            type="button" 
+            data-bs-toggle="offcanvas" 
+            data-bs-target="#offcanvasRight" 
+            aria-controls="offcanvasRight"><span class="navbar-toggler-icon"></span>
+        </button>
+    
+        
+        <% if(!data.isAuthenticated){ %> 
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a href="/login" class="nav-link">Zaloguj</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/register" class="nav-link">Rejestracja</a>
+                </li>
+            </ul>
+        <% }else{ %>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a href="/profil/<%= data.user.name %> " class="nav-link">Profil</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/logout" class="nav-link">Wyloguj</a>
+                </li>
+            </ul>
+            
+        <% } %> 
+            
+       
+    </div>
+</nav>
+
+
+
+<div class="offcanvas offcanvas-end bg-dark" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasRightLabel">Offcanvas right</h5>
+        <button type="button" class="btn-close text-reset bg-light" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <%- include('sidebar')  %> 
+    </div>
+</div>      
+

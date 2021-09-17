@@ -6,6 +6,10 @@ const userSchema = new Schema({
         type : String,
         required : true
     }, 
+    profileImage:{
+        data: Buffer,
+        contentType: String
+    },
     password: {
         type : String,
         required: true
@@ -13,7 +17,10 @@ const userSchema = new Schema({
     joiningDate:{
         type : Date,
         default: Date.now()
-    } 
+    },
+    description: String,
+    profileImage: String, // path
+    thread: Array
 });
 
 module.exports = mongoose.model('User', userSchema);
