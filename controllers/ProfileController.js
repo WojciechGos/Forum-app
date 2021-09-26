@@ -1,5 +1,5 @@
 const User = require('../model/User')
-const UserPermisions = require('../UserPermissions')
+const UserPermisions = require('../Utils/UserPermissions')
 
 function profilePost(req, res){
     console.log(req.file)

@@ -2,6 +2,11 @@ if(process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 
+const fs = require('fs')
+
+
+
+
 
 const express = require('express');
 const app = express();
@@ -46,12 +51,13 @@ const loginRouter = require('./routes/LoginRouter');
 const registerRouter = require('./routes/RegisterRouter');
 const homePageRouter = require('./routes/HomePageRouter')
 const profileRouter = require('./routes/ProfileRouter')
-
+const imageCreatorRouter = require('./routes/ImageCreatorRouter')
 
 app.use(loginRouter)
 app.use(registerRouter)
 app.use(homePageRouter)
 app.use(profileRouter)
+app.use(imageCreatorRouter)
 
 app.get('/logout', (req, res)=>{
     req.logOut()

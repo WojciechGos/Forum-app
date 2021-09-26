@@ -1,19 +1,35 @@
 const User = require('../model/User')
 const bcrypt = require('bcrypt');
+const createProfileImage = require('../Utils/DiceBear').createProfileImage
+const fs = require('fs');
+const e = require('express');
 
 function registerGet(req, res){
-    res.render('register/register');
+    let svg = createProfileImage("seed")
+    
+    res.render('register/register', {image: svg});
 }
 
+/*
+    todo: set avatar
+**/
 async function createUser(req, res){
     try{
+        let path = `${__dirname}/../Images/Profiles/${req.body.username}-avatar.svg`
+        
+        console.log(path)
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         let user = new User({
-            name : req.body.login,
+            name : req.body.username,
             password : hashedPassword,
-            joiningDate: Date.now()
+            joiningDate: Date.now(),
+            profileImage: path
         });
-        console.log(user);
+
+        let svg = createProfileImage(req.body.avatar)
+        fs.writeFile(path, svg, (e)=>{
+            console.error(e)
+        })
         user = await user.save();
         res.redirect('/');
     }catch(err){
@@ -21,22 +37,20 @@ async function createUser(req, res){
     }
 } 
 
-
 async function registerPost(req, res){
+    console.log(req.body)
     try{
-        const user = await User.findOne({name: req.body.login});
-
-        if(user === null){
-            console.log('creating user')
-            createUser(req, res);
-            res.redirect('/')
+        const user = User.findOne({name: req.body.name})
+        if(user != null){
+            createUser(req, res)
         }else{
-            console.log("User Exist");
+            console.log('name is taken')
         }
-    }catch(err){
-        console.error(err);
+    }catch(e){
+        console.error(e)
     }
-   
+    
+    
    
 }
 

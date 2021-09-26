@@ -1,5 +1,5 @@
 const ejs = require('ejs')
-const UserPermisions = require('../UserPermissions')
+const UserPermisions = require('../Utils/UserPermissions')
 
 function homePageGet(req, res){
     
