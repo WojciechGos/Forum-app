@@ -1,9 +1,14 @@
 const ejs = require('ejs')
-const UserPermisions = require('../Utils/UserPermissions')
+const Data = require('../Utils/Data')
 
 function homePageGet(req, res){
-    
-    res.render('index', {data: UserPermisions.getData(req)})
+    Data.getMainUserData(req.user)
+        .then((data)=>{
+            res.render('index', {data: data})
+        })
+        .catch((e)=>{
+            console.error(e)
+        })
 }
 
 module.exports.homePageGet = homePageGet

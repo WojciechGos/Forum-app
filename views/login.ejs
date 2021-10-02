@@ -8,11 +8,11 @@
     <title>Document</title>
 </head>
 <body>
-    <%- include('navbar') %> 
+    <%- include('navbar', {data:data}) %> 
     <div class="container">
-        <% if(messages.error){ %>
+        <!-- <% if(messages.error){ %>
             <%= messages.error %> 
-        <% } %>
+        <% } %> -->
         <form method="POST" action="/Login">
             <div class="mb-3">
                 <label for="UserName" class="form-label">User Name</label>

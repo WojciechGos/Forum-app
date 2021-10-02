@@ -1,9 +1,14 @@
 const User = require('../model/User');
 const mongoose = require('mongoose');
-const UserPermisions = require('../Utils/UserPermissions')
+const Data = require('../Utils/Data')
 
 function loginGet(req, res){
-    res.render('login', {data: UserPermisions.getData(req)});
+    try{
+        let data = Data.getMainUserData(req.user)
+        res.render('login', {data: data});
+    }catch(e){
+        console.error(e)
+    }
 }
 
 

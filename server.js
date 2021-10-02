@@ -51,7 +51,8 @@ const loginRouter = require('./routes/LoginRouter');
 const registerRouter = require('./routes/RegisterRouter');
 const homePageRouter = require('./routes/HomePageRouter')
 const profileRouter = require('./routes/ProfileRouter')
-const imageCreatorRouter = require('./routes/ImageCreatorRouter')
+const imageCreatorRouter = require('./routes/ImageCreatorRouter');
+const { rejects } = require('assert');
 
 app.use(loginRouter)
 app.use(registerRouter)

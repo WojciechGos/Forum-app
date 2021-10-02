@@ -15,30 +15,22 @@
         <div class="row">
             <div class="col-3">
                 <div class="card" style="width: 18rem;">
-                    <label class="form-label" for="customFile">Default file input example</label>
-                    <form
-                        enctype="multipart/form-data"
-                        action="/profil/<%= data.user.name %>" 
-                        method="POST">
-
-                        <input type="file" class="form-control" name="avatar" id="customFile" />
-                        <button type="submit" class="btn btn-primary">Akceptuj</button>
-                    </form>
-                  </div>
+                   <%- data.image  %> 
+                </div>
             </div>
             <div class="col-7">
                 <form action="/profil/<%= data.user.name %>?_method=PUT">
                     <fieldset disabled>
                         <h1>Informacje o tobie</h1>
                         <div class="mb-3">
-                            <label for="disabledTextInput" class="form-label">Disabled input</label>
-                            <input type="text" id="disabledTextInput" class="form-control" placeholder="Disabled input">
+                            <label for="disabledTextInput" class="form-label">Nick</label>
+                            <input type="text" id="disabledTextInput" class="form-control" placeholder="<%= data.user.name %> ">
                            
                         </div>
                         <div class="mb-3">
-                            <label for="disabledSelect" class="form-label">Disabled select menu</label>
-                            <select id="disabledSelect" class="form-select">
-                            <option>Disabled select</option>
+                            <label for="disabledSelect" class="form-label">Opis</label>
+                            <textarea name="" id="" cols="100" rows="3"></textarea>
+                            
                             </select>
                         </div>
                       <button type="submit" class="btn btn-primary">Edytuj</button>

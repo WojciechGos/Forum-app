@@ -11,19 +11,24 @@
         </button>
     
         
-        <% if(!data.isAuthenticated){ %> 
+        <% if(data.mainUser == null){ %> 
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a href="/login" class="nav-link">Zaloguj</a>
+
+                    <button class="nav-link bg-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Zaloguj
+                    </button>
                 </li>
                 <li class="nav-item">
-                    <a href="/register" class="nav-link">Rejestracja</a>
+                    <button class="nav-link bg-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Rejestracja
+                    </button>    
                 </li>
             </ul>
         <% }else{ %>
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a href="/profil/<%= data.user.name %> " class="nav-link">Profil</a>
+                    <a href="/profil/<%= data.mainUser.name %> " class="nav-link">Profil</a>
                 </li>
                 <li class="nav-item">
                     <a href="/logout" class="nav-link">Wyloguj</a>
@@ -34,9 +39,10 @@
             
        
     </div>
+    
 </nav>
 
-
+<%- include('modal_tabs_login_register')  %> 
 
 <div class="offcanvas offcanvas-end bg-dark" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
     <div class="offcanvas-header">
