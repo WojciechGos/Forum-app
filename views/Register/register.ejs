@@ -1,44 +1,76 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <title>Document</title>
-</head>
-<body>
-    <div class="container"> 
-        
-            <form method="POST" action="/Register">
-               
-                    <div id="avatarWrapper">
-                        <%- image  %>
-                    </div>
-                
-                    <input type="text" class="form-control mb-3" id="newSeedInput" name="avatar">
-                    <button type="button" class="btn btn-primary" id="newSeedButton">Nowy</button>
-                
-                
-                
-                    <div class="mb-3">
-                        <label for="InputLoginRegister" class="form-label">Nazwa Użytkownika</label>
-                        <input required type="text" name="username"  class="form-control" id="InputLoginRegister">
-                    </div>
-                    <div class="mb-3">
-                        <label for="InputPasswordRegister" class="form-label">Hasło</label>
-                        <input required type="password" name="password" class="form-control" id="InputPasswordRegister">
-                    </div>
-                    <div class="mb-3">
-                        <label for="InputPasswordRegister" class="form-label">Powtórz Hasło</label>
-                        <input required type="password" class="form-control" id="InputPasswordRepeatRegister">
-                        <div class="invalid-feedback">Hasła nie są takie same</div>
-                    </div>
-              
-                    <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-        
-    </div>
-    <script src="registerScript.js"></script>
-</body>
-</html>
+
+<div class="container">
+
+    <form method="POST" action="/Register">
+
+        <div id="avatarWrapper">
+            <%- data.image %>
+        </div>
+
+        <input type="text" value="seed" class="form-control mb-3" id="newSeedInput" name="avatar">
+        <button type="button" class="btn btn-primary" id="newSeedButton">Nowy</button>
+
+
+
+        <div class="mb-3">
+            <label for="InputLoginRegister" class="form-label">Nazwa Użytkownika</label>
+            <input required type="text" name="username" class="form-control" id="InputLoginRegister">
+        </div>
+        <div class="mb-3">
+            <label for="InputPasswordRegister" class="form-label">Hasło</label>
+            <input required type="password" name="password" class="form-control" id="InputPasswordRegister">
+        </div>
+        <div class="mb-3">
+            <label for="InputPasswordRegister" class="form-label">Powtórz Hasło</label>
+            <input required type="password" class="form-control" id="InputPasswordRepeatRegister">
+            <div class="invalid-feedback">Hasła nie są takie same</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Zarejestruj</button>
+    </form>
+
+</div>
+<script >
+   
+    const passwordInput = document.getElementById('InputPasswordRegister');
+    const passwordInputRepeat = document.getElementById('InputPasswordRepeatRegister');
+    const newSeedInput = document.getElementById('newSeedInput')
+    const newSeedButton = document.getElementById('newSeedButton')
+    const avatarWrapper = document.getElementById('avatarWrapper')
+
+    passwordInput.addEventListener('change', () => {
+        console.log(passwordInput.value)
+    });
+
+    passwordInputRepeat.addEventListener('keyup', () => {
+        console.log(passwordInputRepeat.value);
+    });
+
+    function getImage() {
+       
+
+    }
+
+    newSeedButton.addEventListener('click', ()=>{
+        let seed = newSeedInput.value
+        if(seed == ""){
+            seed = "seed"
+        }
+        console.log(seed)
+        fetch(`http://localhost:5000/imageCreator/${seed}`)
+            .then(async (res) => {
+
+                try {
+                    avatarWrapper.innerHTML = await res.text()
+                } catch (e) {
+                    console.error(e)
+                }
+
+            })
+            .catch((e) => {
+                console.error(e)
+            })
+    })
+
+
+</script>

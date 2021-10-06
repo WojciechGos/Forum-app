@@ -16,8 +16,7 @@ function registerGet(req, res){
 async function createUser(req, res){
     try{
         let path = `${__dirname}/../Images/Profiles/${req.body.username}-avatar.svg`
-        
-        console.log(path)
+    
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         let user = new User({
             name : req.body.username,
@@ -38,13 +37,13 @@ async function createUser(req, res){
 } 
 
 async function registerPost(req, res){
-    console.log(req.body)
+
     try{
         const user = User.findOne({name: req.body.name})
         if(user != null){
             createUser(req, res)
         }else{
-            console.log('name is taken')
+
         }
     }catch(e){
         console.error(e)

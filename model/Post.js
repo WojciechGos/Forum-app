@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
 const postSchema = new Schema({
+    userId: {
+        type: mongoose.Types.ObjectId,
+        required: true
+    },
     title: {
         type: String,
         required:true
-    },
-    userId:{
-        type: mongoose.Types.ObjectId,
-        required: true
     },
     thread: {
         type: mongoose.Types.ObjectId,

@@ -1,6 +1,5 @@
 const User = require('../model/User')
 const fs = require('fs')
-const { rejects } = require('assert')
 
 
 
@@ -8,13 +7,14 @@ const { rejects } = require('assert')
 function getMainUserData(user){    
     return new Promise((resolve, reject)=>{
         if(user != null) {
-            const imagePath = `${__dirname}\\..\\Images\\Profiles\\${user.name}-avatar.svg`
+            const imagePath = `${__dirname}\\..//Images//Profiles//${user.name}-avatar.svg`
             fs.readFile(imagePath, 'utf-8', (err, img)=>{
                 if(err){
                     reject(err)
                 }
-                resolve({mainUser: user, image: img})
-                return
+                Object.assign(user, {image: img})
+                resolve({mainUser: user})
+                
             })
         }else{
             resolve({user: null})
@@ -23,26 +23,25 @@ function getMainUserData(user){
 }
 
 async function getUserData(name){
-    let user
-    try {
-        user = await User.findOne({name:name})
-    } catch (error) {
-        return e
-    }
-    if(user == null)
-        return null
-    
-    const imagePath = `${__dirname}\\..\\Images\\Profiles\\${user.name}-avatar.svg`
-    return new Promise(async (resolve, reject)=>{
-            let img = await fs.readFile(imagePath, (err, img)=>{
-                if(err){
+    console.log(`name: ${name}`)
+    try{
+        let user = await User.findOne({ name: name })
+
+        const imagePath = `${__dirname}\\..\\Images\\Profiles\\${name}-avatar.svg`
+        return new Promise((resolve, reject) => {
+            fs.readFile(imagePath, 'utf-8', (err, data) => {
+                if (err) {
                     reject(err)
-                }else{
-                    resolve({user: user,image: img})
+                } else {
+                    Object.assign(user, {image: data})
+                    resolve({user: user})
                 }
             })
-    
-    })
+
+        })
+    }catch(e){
+        console.error(e)
+    }
 }
 
 

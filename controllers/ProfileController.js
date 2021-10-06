@@ -2,7 +2,7 @@ const User = require('../model/User')
 const Data = require('../Utils/Data')
 
 function profilePost(req, res){
-    console.log(req.file)
+    // console.log(req.file)
 }                                       
 function profilePut(req, res){
 
@@ -10,12 +10,23 @@ function profilePut(req, res){
 
 
 async function profileGet(req, res){
-    const isOwner = req.user.name == req.params.username
-    console.log(req.user)
-    // todo: replace arguments to exact data that UserPermissions need
-    if(getUser(req.params.username)){
+    const name = req.params.username
+
+    if(req.params.username === req.user.name){
+
+    }
+    
+    if(getUser(name)){
+        // todo write if statement to check if user and mainUser is the same 
         try {
-            let data = await Data.getUserData(req.params.username)
+            console.log(name)
+            let userData = await Data.getUserData(name)
+
+            let mainUserData = await Data.getMainUserData(req.user)
+
+            let data = userData 
+            Object.assign(data, mainUserData)
+          
             res.render('Profile/profile', {data:data})
         } catch (error) {
             console.error(error)

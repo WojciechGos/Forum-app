@@ -29,7 +29,6 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(methodOverride('_method'))
-app.use(flash());
 app.use(session({
     secret: process.env.SECRET,
     store: sessionStore,
@@ -51,8 +50,7 @@ const loginRouter = require('./routes/LoginRouter');
 const registerRouter = require('./routes/RegisterRouter');
 const homePageRouter = require('./routes/HomePageRouter')
 const profileRouter = require('./routes/ProfileRouter')
-const imageCreatorRouter = require('./routes/ImageCreatorRouter');
-const { rejects } = require('assert');
+const imageCreatorRouter = require('./routes/ImageCreatorRouter');;
 
 app.use(loginRouter)
 app.use(registerRouter)
