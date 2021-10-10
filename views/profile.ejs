@@ -9,7 +9,7 @@
     <title></title>
 </head>
 <body>
-    <%- include('../navbar', {data:data})%> 
+    <%- include('navbar', {data:data})%> 
 
     <div class="container-fluid">
         <div class="row">
@@ -29,7 +29,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="disabledSelect" class="form-label">Opis</label>
-                            <textarea name="" id="" cols="100" rows="3"></textarea>
+                            <textarea name="" id="" rows="3"></textarea>
                             
                             </select>
                         </div>
@@ -38,7 +38,7 @@
                   </form>
             </div>
             <div class="col-2">
-                <%- include('../sidebar', {data:data})  %> 
+                <%- include('sidebar', {data:data})  %> 
             </div>
         
           

@@ -2,11 +2,16 @@
 <div class="wrapper" style="height: 100%;">
     <aside class="container bg-dark" 
         id="sidebar">
-        <div class="row mb-4">
-            <button class="btn btn-primary">Dodaj Post</button>
+        <div class="row mb-2">
+            <button class="btn btn-primary" id="create_post" data-bs-toggle="modal" data-bs-target="#modal_create_post_thread">
+                Dodaj Post
+            </button>
         </div>
-        <div class="row mb-4">
-            <button class="btn btn-primary">Utwórz Wątek</button>
+        <div class="row mb-2">
+            <button class="btn btn-primary" id="create_thread" data-bs-toggle="modal"
+                data-bs-target="#modal_create_post_thread">
+                Utwórz Wątek
+            </button>
         </div>
         
         <div class="row g-5">
@@ -23,4 +28,5 @@
             </li>
         </div>
     </aside>
+  
 </div>

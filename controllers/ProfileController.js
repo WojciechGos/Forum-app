@@ -27,7 +27,7 @@ async function profileGet(req, res){
             let data = userData 
             Object.assign(data, mainUserData)
           
-            res.render('Profile/profile', {data:data})
+            res.render('profile', {data:data})
         } catch (error) {
             console.error(error)
         }

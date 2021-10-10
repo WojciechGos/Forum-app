@@ -43,7 +43,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.static('views'));
-app.use(express.static('views/Register'));
 
 // routes
 const loginRouter = require('./routes/LoginRouter');
