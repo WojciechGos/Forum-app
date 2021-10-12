@@ -4,10 +4,6 @@ if(process.env.NODE_ENV !== 'production') {
 
 const fs = require('fs')
 
-
-
-
-
 const express = require('express');
 const app = express();
 
