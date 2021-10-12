@@ -39,20 +39,21 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.static('views'));
-app.use(express.static('views/Register'));
 
 // routes
-const loginRouter = require('./routes/LoginRouter');
-const registerRouter = require('./routes/RegisterRouter');
+const loginRouter = require('./routes/LoginRouter')
+const registerRouter = require('./routes/RegisterRouter')
 const homePageRouter = require('./routes/HomePageRouter')
 const profileRouter = require('./routes/ProfileRouter')
-const imageCreatorRouter = require('./routes/ImageCreatorRouter');;
+const imageCreatorRouter = require('./routes/ImageCreatorRouter')
+const entryRouter = require('./routes/EntryRouter')
 
 app.use(loginRouter)
 app.use(registerRouter)
 app.use(homePageRouter)
 app.use(profileRouter)
 app.use(imageCreatorRouter)
+app.use(entryRouter)
 
 app.get('/logout', (req, res)=>{
     req.logOut()

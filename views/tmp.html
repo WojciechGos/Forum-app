@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+    
+        <form method="POST" action="post" enctype="multipart/form-data">
+            <div class="mb-3 flex-fill" >
+                <label for="inputContent" class="form-label">Treść</label>
+                <div class="custom-input" id="createPostInput" contenteditable="true">
+                    
+                    <div><br></div><div>
+                    <img src="https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg" alt="img&amp;gt;: The Image Embed element - HTML: HyperText Markup Language | MDN"><br></div><div><br></div><div><br></div><div><br></div><div>pśk jebie&nbsp;</div><div><br></div><div><br></div><div><img src="https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg" alt="Maximally optimizing image loading for the web in 2021"><br></div></div>
+
+                </div>
+        </form>
+    
+        
+    </div>
+
+
+    <script>
+
+        const toDataURL = url => fetch(url)
+                .then(response => response.blob())
+                .then(blob => new Promise((resolve, reject) => {
+                    const reader = new FileReader()
+                    reader.onloadend = () => resolve(reader.result)
+                    reader.onerror = reject
+                    reader.readAsDataURL(blob)
+                }))
+
+
+        
+            function dataURLtoFile(dataurl, filename) {
+                var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+                while (n--) {
+                    u8arr[n] = bstr.charCodeAt(n);
+                }
+                return new File([u8arr], filename, { type: mime });
+            }
+
+            toDataURL(url)
+                    .then(dataUrl => {
+                        console.log('Here is Base64 Url', dataUrl)
+                        var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
+                        console.log("Here is JavaScript File Object", fileData)
+                        fileArr.push(fileData)
+                    })
+        function getImages(){
+            const wrapper = document.getElementById('createPostInput')
+            let images = wrapper.getElementsByTagName("img")
+            console.log(images)
+        }
+        getImages()
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

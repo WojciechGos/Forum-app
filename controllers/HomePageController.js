@@ -1,4 +1,3 @@
-const ejs = require('ejs')
 const Data = require('../Utils/Data')
 
 function homePageGet(req, res){
