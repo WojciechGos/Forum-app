@@ -29,8 +29,8 @@
 
     <script>
 
-
-        const toDataURL = url => fetch(url)
+        function toDataURL(url){
+            fetch(url)
                 .then(response => response.blob())
                 .then(blob => new Promise((resolve, reject) => {
                     const reader = new FileReader()
@@ -38,29 +38,34 @@
                     reader.onerror = reject
                     reader.readAsDataURL(blob)
                 }))
+        }
 
 
         
-            function dataURLtoFile(dataurl, filename) {
-                var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-                    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-                while (n--) {
-                    u8arr[n] = bstr.charCodeAt(n);
-                }
-                return new File([u8arr], filename, { type: mime });
+        function dataURLtoFile(dataurl, filename) {
+            var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
             }
-
-            toDataURL(url)
+            return new File([u8arr], filename, { type: mime });
+        }
+    
+        
+        function getImages(){
+            const wrapper = document.getElementById('createPostInput')
+            let images = wrapper.getElementsByTagName("img")
+            for(let i=0; i<images.length; ++i){
+                console.log()
+                toDataURL(images[i].currentSrc)
                     .then(dataUrl => {
                         console.log('Here is Base64 Url', dataUrl)
                         var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
                         console.log("Here is JavaScript File Object", fileData)
                         fileArr.push(fileData)
                     })
-        function getImages(){
-            const wrapper = document.getElementById('createPostInput')
-            let images = wrapper.getElementsByTagName("img")
-            console.log(images)
+            }
+
         }
         getImages()
 
