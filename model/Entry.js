@@ -1,18 +1,18 @@
 const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
-const postSchema = new Schema({
+const entrySchema = new Schema({
     userId: {
         type: mongoose.Types.ObjectId,
-        required: true
+        // required: true
     },
     title: {
         type: String,
-        required:true
+        // required:true
     },
     thread: {
         type: mongoose.Types.ObjectId,
-        required: true
+        // required: true
     },
     date:{
         type: Date,
@@ -20,8 +20,10 @@ const postSchema = new Schema({
     },
     content: {
         type: String,
-        required:true
+        // required:true
     },
     comment: Array
 
 });
+
+module.exports = mongoose.model('Entry', entrySchema )
