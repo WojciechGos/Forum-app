@@ -1,13 +1,17 @@
 const Entry = require('../model/Entry')
 
 async function entryPost(req, res){
-    console.log(req.body.data)
+    console.log(req.body.images)
+    let images = req.body.images
+    images.forEach(item =>{
+        console.log(item)
+    })
     const entry = new Entry({
         title: 'test1',
         content: req.body.data
     })
     try{
-        await entry.save()
+        // await entry.save()
     }catch(e){
         console.error(e)
     }

@@ -8,7 +8,7 @@
             <div class="custom-input" 
             id="createPostForm" 
             contenteditable="true"
-            name="dick">
+            name="content">
 
                 <div><br></div>
                 <div>
@@ -36,16 +36,35 @@
     const editableDiv = document.getElementById('createPostForm')
     const input = document.getElementById('inputFile')
     const form = document.getElementById('postForm')
-
+    
+    function getImages(){
+        let collection = editableDiv.getElementsByTagName('div')
+        // console.log(collection)
+        let images = []
+        for(let item of collection){
+            // console.log(item)
+            let tmp = item.getElementsByTagName('img')
+            if(tmp.length != 0){
+                // console.log(tmp[0].currentSrc)
+                images.push(tmp[0].currentSrc)
+            }
+            console.log(tmp)
+        }
+        console.log(images)
+        return images
+    }
 
 
     form.addEventListener('submit', function(event){
         event.preventDefault()
         let formData = new FormData()
-        
+        getImages().forEach(item =>{
+
+            formData.append('images', item)
+        })
         formData.append('data', editableDiv.innerHTML)
-        // formData.append('data', 'chuj')
-        console.log(formData)
+       
+        console.log(formData.values)
 
         fetch("entry", {
             method: 'post',
