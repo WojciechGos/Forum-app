@@ -1,10 +1,22 @@
 const Entry = require('../model/Entry')
+const fs = require('fs')
+
 
 async function entryPost(req, res){
-    console.log(req.body.images)
+    // console.log(req.body.images)
     let images = req.body.images
+    let file
     images.forEach(item =>{
         console.log(item)
+        if(item.substr(0, 5) == "data:"){
+            
+            let buffer = Buffer.from(item.split(',')[1], 'base64')
+            let path = `${__dirname}/../Images/Post/${Date.now()}.png`
+            fs.writeFile(path, buffer, (e)=>{
+                console.error(e)
+            })
+        }
+       
     })
     const entry = new Entry({
         title: 'test1',
