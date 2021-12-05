@@ -1,8 +1,17 @@
+const fetch = require('cross-fetch')
 const Entry = require('../model/Entry')
 const fs = require('fs')
 let uniqID = require('uniqid')
-const fetch = require('cross-fetch')
 const { response } = require('express')
+
+
+let path = {
+    postDirectory,
+    createPath(){
+        let id = uniqID()
+        postDirectory = `${__dirname}/../Images/Post/` + id + '/'
+    }
+}
 
 
 function getExtension(item){
@@ -13,47 +22,71 @@ function getExtension(item){
 
 }
 
-async function downloadFile(link, i){
-    try{
 
+async function downloadFile(link){
+    try{
+        
         return await fetch(link, {
             method: 'GET'
         })
-        .then(response=> {
-            response.blob()})
-        .then(blob =>{
-            return new File([blob], `${i}.${getExtension(link)}`)
+        .then(async (response)=> {
+            return await response.buffer()
         })
+        
     }catch(e){
         console.error(e)
     }
 }
 
+function saveFile(path, buffer) {
+
+    fs.writeFile(path, buffer, (e) => {
+        if (e)
+            console.error(e)
+    })   
+}
+
+// function createPath(item, i){
+//     let extension = getExtension(item)
+// }
+async function downloadAndSave(item, path, i){
+    try {
+        let extension = getExtension(item)
+        let buffer = await downloadFile(item)
+        console.log(i)
+        console.log(item)
+        console.log(path)
+        console.log(buffer)
+
+        saveFile((path + i + '.' + extension), buffer)
+    } catch (e) {
+        console.error(e)
+    }
+
+}
 function entryPost(req, res){
     // console.log(req.body.images)
     let images = req.body.images
     let id = uniqID(), i=0, extension
-    let path = `${__dirname}/../Images/Post/${id}`
+    let path = `${__dirname}/../Images/Post/` + id + '/'
+    
     fs.mkdir(path, (e)=>{
         if(e)
             console.error(e)
     })
     
-    images.forEach(item =>{
-        extension = getExtension(item)
-        path = `${__dirname}/../Images/Post/${id}/${i}.${extension}`
-
-        console.log(path)
+    images.forEach((item) =>{
+        
         if(item.substr(0, 5) == "data:"){
+            i++
+            console.log(i)
+            console.log(path)
             let buffer = Buffer.from(item.split(',')[1], 'base64')
-            fs.writeFile(path, buffer, (e)=>{
-                if(e)
-                    console.error(e)
-            })
+            saveFile(path, buffer)
         }else{
-            console.log(downloadFile(item, i))
+           downloadAndSave(item,path, i)
         }
-        i++
+        
        
     })
     const entry = new Entry({
