@@ -1,21 +1,9 @@
 const Entry = require('../model/Entry')
-let uniqID = require('uniqid')
-
-
-
-
-
-
-
-
-
-
 
 function entryPost(req, res){
   
     let images = req.body.images
-    let name=0, extension
-    
+    console.log(req.body.data)
     
     
     // call FileHandler.save()
