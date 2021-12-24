@@ -8,7 +8,7 @@ const jsdom = require('jsdom')
 
 
 module.exports = class EntryHandler{
-    path = _createDirectoryPath();
+    path = this._createDirectoryPath();
 
     /*
 
@@ -18,6 +18,11 @@ module.exports = class EntryHandler{
 
     constructor(content){
 
+        const collection = this._getImages(content)
+
+        for(item of collection){
+
+        }
 
 
     }
@@ -25,11 +30,20 @@ module.exports = class EntryHandler{
     /*
 
    **/
-    _getImagesSourceAndRename(content) {
+    _getImages(content) {
         const dom = new jsdom.JSDOM(content)
-        const editableDiv = dom.document.getElementById('createPostForm')
-
+        const editableDiv = dom.getElementById('createPostForm')
+        const collection = editableDiv.getElementByTagName('div')
+        let images
+        for(let item of collection){
+            let tmp = item.getElementByTagName('img')
+            if(tmp.length != 0){
+                images.push(tmp[0])
+            }
+        }
+        return images
     }
+    
 
 
 
@@ -64,6 +78,7 @@ module.exports = class EntryHandler{
         })
         return path
     }
+ 
 
     /* 
 
@@ -103,20 +118,20 @@ module.exports = class EntryHandler{
 
 
 
-function saveEntryImages(images) {
-    let name = _nameGenerator(), extension, name
-    let path = _createEntryPath() // possible error
-    images.forEach((item) => {
-        extension = getExtension(item)
-        name = path + name.netx() + '.' + extension
-        if (item.substr(0, 5) == "data:") {
-            let buffer = Buffer.from(item.split(',')[1], 'base64')
-            saveFile(name, buffer)
-        } else {
-            downloadAndSave(item, name)
-        }
-    })
-}
+// function saveEntryImages(images) {
+//     let name = _nameGenerator(), extension, name
+//     let path = _createEntryPath() // possible error
+//     images.forEach((item) => {
+//         extension = getExtension(item)
+//         name = path + name.netx() + '.' + extension
+//         if (item.substr(0, 5) == "data:") {
+//             let buffer = Buffer.from(item.split(',')[1], 'base64')
+//             saveFile(name, buffer)
+//         } else {
+//             downloadAndSave(item, name)
+//         }
+//     })
+// }
 
 
 

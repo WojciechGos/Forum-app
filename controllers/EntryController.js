@@ -1,12 +1,13 @@
 const Entry = require('../model/Entry')
-
+const EntryHandler = require('../Utils/EntryHandler')
 function entryPost(req, res){
   
-    let images = req.body.images
+    
     console.log(req.body.data)
     
+    let tmp = new EntryHandler(req.body.data)
     
-    // call FileHandler.save()
+    
    
         
     const entry = new Entry({
