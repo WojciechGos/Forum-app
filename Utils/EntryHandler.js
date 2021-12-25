@@ -8,44 +8,125 @@ const jsdom = require('jsdom')
 
 
 module.exports = class EntryHandler{
-    path = this._createDirectoryPath();
+    // path = this._createDirectoryPath();  
+    dom 
+
 
     /*
-
-
-
+        pass html content 
     **/
-
     constructor(content){
-
-        const collection = this._getImages(content)
-
-        for(item of collection){
-
-        }
-
-
+        this.dom = new jsdom.JSDOM(content)
     }
 
     /*
 
    **/
-    _getImages(content) {
-        const dom = new jsdom.JSDOM(content)
-        const editableDiv = dom.getElementById('createPostForm')
-        const collection = editableDiv.getElementByTagName('div')
-        let images
-        for(let item of collection){
-            let tmp = item.getElementByTagName('img')
-            if(tmp.length != 0){
-                images.push(tmp[0])
+    save() {
+        let collection = this.dom.window.document.body
+        // console.log(this.dom.window.document)
+        let div, source, name
+    
+        
+        /*
+            Its working dont touch it
+        */
+        for (let i = 0; i < collection.getElementsByTagName('div').length; ++i) {
+            
+            div = collection.getElementsByTagName('div')[i].getElementsByTagName('img')
+           
+
+            if (this._containImage(div) != 0) {
+
+                source = div[0].src // its image url or DataURI
+                
+                
+                name = `${uniqID()}.${this._getExtension(source)}`
+   
+               
+                // collection.getElementsByTagName('div')[i].innerHTML = `<img src="${name}" >`
+                collection.getElementsByTagName('div')[i].getElementsByTagName('img')[0].src = name
+                
+                // console.log(collection.getElementsByTagName('div')[i].innerHTML)
+      
+
+                
+                if(this._isDataUri(source)){
+
+                }
+                else{
+
+                }   
             }
+
         }
-        return images
+        // console.log(collection.innerHTML)
+        // this.dom.window.document.body.innerHTML = collection.innerHTML
+        console.log(collection.innerHTML)
+        // this._saveEntryContent(this.dom.window.document.body.innerHTML)
+        
+    }
+    /*
+        It works because objects are passes by reference.
+    **/
+    _injectNewNameToImageSource(name, image){
+        
+        
+    }
+    _isDataUri(image){
+        if (image.substr(0, 5) == "data:")
+            return true
+        return false
+    }
+
+
+    _saveUriImage(uri, name){
+        let buffer = Buffer.from(uri.split(',')[1], 'base64')
+        this._saveImage(buffer)
+    }
+
+    _downloadAndSaveImage(url, name){
+        let buffer = this._downloadImage(url)
+        this._saveImage(buffer)
+    }
+    /* 
+
+    save Image to the path that is previously created
+
+    **/
+
+    async _saveImage(buffer) {
+        try {
+            let destinationPath = `${path}/${uniqID()}.${this._getExtension(image)}`
+            fs.writeFile(destinationPath, buffer, (e) => {
+                if (e)
+                    console.error(e)
+            })
+        } catch (e) { console.error(e) }
+    }
+
+
+    
+    _containImage(content){
+        if(content.length != 0)
+            return true
+        return false
     }
     
+    async _downloadImage(link) {
+        try {
 
+            return await fetch(link, {
+                method: 'GET'
+            })
+                .then(async (response) => {
+                    return await response.buffer()
+                })
 
+        } catch (e) {
+            console.error(e)
+        }
+    }
 
 
     /*
@@ -56,10 +137,10 @@ module.exports = class EntryHandler{
 
     **/
 
-    saveEntryContent(content){
-        let destinationPath = `${path}/${uniqID()}.html`
+    _saveEntryContent(content){
+        let destinationPath = `${this.path}/${uniqID()}.html`
         fs.writeFile(destinationPath, content, (e)=>{
-            console.error(e)
+            if(e) console.error(e)
         })
     }
 
@@ -80,22 +161,7 @@ module.exports = class EntryHandler{
     }
  
 
-    /* 
 
-        save Image to the path that is previously created
-
-    **/
-
-    async _saveImage(item) {
-        try{
-            let destinationPath = `${path}/${uniqID()}.${_getExtension(item)}`
-            let buffer = await downloadFile(item)
-            fs.writeFile(destinationPath, buffer, (e) => {
-                if (e)
-                console.error(e)
-            })
-        }catch(e) { console.error(e) }
-    }
 
     /*
 
@@ -106,7 +172,7 @@ module.exports = class EntryHandler{
     **/
 
     _getExtension(item) {
-        if (item.substr(0, 5) == "data:") {
+        if (item.slice(0, 5) == "data:") {
             return item.split(';')[0].split('/')[1]
         }
         return item.split('.').pop()
@@ -118,45 +184,12 @@ module.exports = class EntryHandler{
 
 
 
-// function saveEntryImages(images) {
-//     let name = _nameGenerator(), extension, name
-//     let path = _createEntryPath() // possible error
-//     images.forEach((item) => {
-//         extension = getExtension(item)
-//         name = path + name.netx() + '.' + extension
-//         if (item.substr(0, 5) == "data:") {
-//             let buffer = Buffer.from(item.split(',')[1], 'base64')
-//             saveFile(name, buffer)
-//         } else {
-//             downloadAndSave(item, name)
-//         }
-//     })
-// }
-
-
-
-async function downloadFile(link) {
-    try {
-
-        return await fetch(link, {
-            method: 'GET'
-        })
-            .then(async (response) => {
-                return await response.buffer()
-            })
-
-    } catch (e) {
-        console.error(e)
-    }
-}
 
 
 
 
 
-module.exports.saveHTML = function saveHTML(){
 
-}
 
 
 

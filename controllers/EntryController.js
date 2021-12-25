@@ -3,22 +3,22 @@ const EntryHandler = require('../Utils/EntryHandler')
 function entryPost(req, res){
   
     
-    console.log(req.body.data)
+    // console.log(req.body.data)
     
-    let tmp = new EntryHandler(req.body.data)
-    
+    let entry = new EntryHandler(req.body.data)
+    entry.save()
     
    
         
-    const entry = new Entry({
-        title: 'test1',
-        content: req.body.data
-    })
-    try{
-        // await entry.save()
-    }catch(e){
-        console.error(e)
-    }
+    // const entry = new Entry({
+    //     title: 'test1',
+    //     content: req.body.data
+    // })
+    // try{
+    //     // await entry.save()
+    // }catch(e){
+    //     console.error(e)
+    // }
     // res.redirect('/entry', 200 ,{data: req.body.data})
 }
 async function entryGet(req, res){
