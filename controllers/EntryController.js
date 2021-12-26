@@ -6,7 +6,7 @@ function entryPost(req, res){
     if(req.user != null){
 
         let entry = new EntryHandler(req.body, req.user)
-        entry.save()
+        // entry.save()
     }
     
    

@@ -1,31 +1,33 @@
-<div class="container">
+<div class="container-fluid">
     <form method="POST" id="postForm" enctype="multipart/form-data">
-        
-        <input type="text" name="title">
-        <div class="mb-3 flex-fill">
+        <label for="">Tytuł</label>
+        <input
+        style="width: 100%;" 
+        class="mb-3"
+        type="text" 
+        name="title">
+        <div class="mb-3">
             
-            <div class="custom-input" 
+            <div class="custom-input container-fluid"
+            style="width:100%;"
             id="createPostForm" 
             contenteditable="true"
             name="content">
-
-                <div><br></div>
-                <div>
-                    <img src="https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg"
-                       >
-                       123<br>
-                </div>
                 <div><br></div>
                 <div><br></div>
                 <div><br></div>
-            
                 <div><br></div>
                 <div><br></div>
-                <div><img src="https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg"
-                        ><br></div>
-                <div>
-                    <img src="https://4rooms.com.pl/userdata/public/gfx/1279cded36c5a39ffac5a8b86ffa654c.jpg" alt="">
-                </div>
+                <div><br></div>
+                <div><br></div>
+                <div><br></div>
+                <div><br></div>
+                <div><br></div>
+                <div><br></div>
+                <div><br></div>
+                <div><br></div>
+                <div><br></div>
+                <div><br></div>
             </div>
         </div>
         <button type="submit" class="btn btn-primary" id="createPost">Dodaj Post</button>
@@ -40,22 +42,19 @@
     const input = document.getElementById('inputFile')
     const form = document.getElementById('postForm')
     
-    function generateID(){
-        return Date.now()
-    }
+    editableDiv.addEventListener('paste', (e)=>{
 
-    function getImages(){
-        let collection = editableDiv.getElementsByTagName('div')
-        let images = []
-        for(let item of collection){
-            let tmp = item.getElementsByTagName('img')
-            if(tmp.length != 0){
-                images.push(tmp[0].currentSrc)
+        // setTimeout is for getElements after paste, not in pending
+        setTimeout(()=>{
+            let collection = editableDiv.getElementsByTagName('img')
+            for(item of collection){
+                item.classList.add('img-fluid')
+                console.log(item)
             }
-        }
-        console.log(images)
-        return images
-    }
+
+        },0)
+    })
+
 
 
     form.addEventListener('submit', function(event){
