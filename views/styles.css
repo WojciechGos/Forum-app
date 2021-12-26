@@ -2,9 +2,7 @@ body{
     overflow-x: hidden;
 }
 
-.modal-content{
-    width: 60vw;
-}
+
 .cursor-pointer{
     cursor: pointer;
 }

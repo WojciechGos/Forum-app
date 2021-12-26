@@ -18,9 +18,9 @@ const entrySchema = new Schema({
         type: Date,
         default: Date.now()
     },
-    content: {
+    path: {
         type: String,
-        // required:true
+        required:true
     },
     comment: Array
 

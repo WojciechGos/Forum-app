@@ -8,7 +8,7 @@ const express = require('express');
 const app = express();
 
 const passport = require('passport');
-const flash = require('express-flash')
+// const flash = require('express-flash')
 const session = require('express-session');
 const MongoStore = require('connect-mongo')
 const methodOverride = require('method-override')
