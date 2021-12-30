@@ -18,7 +18,7 @@ const entrySchema = new Schema({
         type: Date,
         default: Date.now()
     },
-    path: {
+    content_path: {
         type: String,
         required:true
     },

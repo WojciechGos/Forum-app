@@ -11,27 +11,28 @@
 </head>
 <body>
     <div class="wrapper">
-        <div class="row">
-            <%- include('navbar', {data: data}) %> 
-        </div>
-        <div class="row">
+        
+    <%- include('navbar', {data: data}) %>
+    
+    <div class="row">
+        
+        <div class="col-md-10">
             
-            <div class="col-md-10">
-                
-                <div class="post-container" id="posts">
-                    <% for(let i=0; i<5; ++i){ %> 
-                        <%- include('posts') %> 
-                    <% } %> 
+            <div class="post-container" id="posts">
+                <% for(let i=0; i<5; ++i){ %>
+                    <%- include('posts') %>
+                    <% } %>
                 </div>
             </div>
-
-            <div class="col-md-2 hide-md" >
+            
+            <div class="col-md-2 hide-md">
                 <%- include('sidebar') %>
-            </div>  
+            </div>
+        </div>
             <%- include('modal_create_post_thread') %>
 
            
-        </div>
+        
     </div>
 
 

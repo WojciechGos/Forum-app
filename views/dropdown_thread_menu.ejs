@@ -1,0 +1,38 @@
+
+   
+    
+<style type="text/css" scoped>
+    .modal_dropdown{
+        z-index: 2000;
+    }
+    .list_element{
+        cursor: pointer;
+    }
+</style>
+
+<div class="dropdown" >
+    <a class="btn btn-secondary dropdown-toggle" href="#" itemid="input_thread" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+        aria-expanded="false">
+    Wybierz Wątek
+    </a>
+
+<ul class="dropdown-menu modal_dropdown" aria-labelledby="dropdownMenuLink">
+    <li class="list_element dropdown_item">Motoryzacja</li>
+    <li class="list_element dropdown_item">Wędkarstwo</li>
+    <li class="list_element dropdown_item">Un0</li>
+</ul>
+</div>
+<script>
+    const menu = document.querySelectorAll('.list_element')
+    const display_selected_thread = document.querySelector('.dropdown-toggle')
+    menu.forEach(item=>{
+        item.addEventListener('click', (e)=>{
+            display_selected_thread.textContent = item.textContent
+        })
+    })
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+    crossorigin="anonymous"></script>
+

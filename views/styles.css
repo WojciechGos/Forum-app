@@ -3,19 +3,10 @@ body{
 }
 
 [contenteditable] {
-    outline: 2px solid black;
+    outline: 2px solid gray;
     border-radius: 1%;
 }
 
-.cursor-pointer{
-    cursor: pointer;
-}
-
-.position-sticky{
-    position: -webkit-sticky;
-	position: sticky;
-	top: 0;
-}
 
 @media (max-width: 768px) {
     .hide-md{

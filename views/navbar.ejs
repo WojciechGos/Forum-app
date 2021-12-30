@@ -1,5 +1,35 @@
-<nav class="navbar navbar-expand-md bg-dark navbar-dark position-sticky" style="height: 10vh;">
-    <div class="container-fluid">
+<style type="text/css" scoped>
+    .position-sticky-nav{
+        position: -webkit-sticky;
+	    position: sticky;
+	    top: 0;
+        z-index: 1049;
+    }
+    .hide-margin-sm{
+        margin: 5%;
+    }
+    .cursor-pointer{
+        cursor: pointer;
+    }
+    .nav-btn{
+        color : aliceblue;
+        text-decoration: none;
+    }
+    @media (max-width: 768px) {
+        .hide-margin-sm{
+            margin: 1%;
+        }
+        .navbar-brand{
+            display: none;
+        }
+
+}
+
+</style>
+
+<nav class="navbar navbar-expand-md bg-dark navbar-dark position-sticky-nav "
+ style="height: 10vh; width: 100vm;">
+    <div class="d-flex justify-content-between hide-margin-sm" style="width: 100%;">
         <a href="/" class="navbar-brand">Forum</a>
 
     
@@ -12,29 +42,33 @@
     
         
         <% if(data.mainUser == null){ %> 
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-
-                    <button class="nav-link bg-dark" data-bs-toggle="modal" data-bs-target="#modal_tabs_login_register">
+           
+            <div class="row">
+                <div class="col d-flex align-items-center">
+                    <div class="nav-btn bg-dark cursor-pointer" data-bs-toggle="modal" data-bs-target="#modal_tabs_login_register">
                         Zaloguj
-                    </button>
-                </li>
-                <li class="nav-item">
-                    <button class="nav-link bg-dark" data-bs-toggle="modal" data-bs-target="#modal_tabs_login_register">
+                    </div>
+                </div>
+                
+                <div class="col d-flex align-items-center">
+                    <div class="nav-btn bg-dark cursor-pointer" data-bs-toggle="modal" data-bs-target="#modal_tabs_login_register">
                         Rejestracja
-                    </button>    
-                </li>
-            </ul>
-        <% }else{ %>
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a href="/profil/<%= data.mainUser.name %> " class="nav-link">Profil</a>
-                </li>
-                <li class="nav-item">
-                    <a href="/logout" class="nav-link">Wyloguj</a>
-                </li>
-            </ul>
+                    </div>
+                </div>
+            </div>
+              
             
+        <% }else{ %>
+          
+            <div class="row">
+                <div class="col d-flex align-items-center">
+                    <a href="/profil/<%= data.mainUser.name %> " class="nav-btn">Profil</a>
+                </div>
+                <div class="col d-flex align-items-center">
+                    <a href="/logout" class="nav-btn">Wyloguj</a>
+                </div>
+            </div>
+                     
         <% } %> 
             
        
