@@ -4,11 +4,11 @@ const {Schema} = mongoose;
 const entrySchema = new Schema({
     userId: {
         type: mongoose.Types.ObjectId,
-        // required: true
+        required: true
     },
     title: {
         type: String,
-        // required:true
+        required:true
     },
     thread: {
         type: mongoose.Types.ObjectId,

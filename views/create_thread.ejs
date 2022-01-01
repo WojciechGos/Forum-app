@@ -1,18 +1,44 @@
 <div class="container">
 
-    <form>
+    <form id="threadFormId" enctype="multipart/form-data">
         <div class="d-flex flex-column justify-content-between">
             <div class="mb-3">
-                <label for="title" class="form-label">Tytuł</label>
-                <input required type="text" class="form-control">
+                <label for="threadTitle" class="form-label">Tytuł</label>
+                <input value="pyk" required type="text" class="form-control" id="threadTitleId">
             </div>
             <div class="mb-3 flex-fill">
                 <label for="inputContent" class="form-label">Treść</label>
-                <textarea required  class="form-control"  cols="120" rows="20" maxlength="1000"></textarea>
+                <textarea required id="threadDescriptionId" class="form-control"  cols="120" rows="20" maxlength="1000">123</textarea>
             </div>
             <button type="submit" class="btn btn-primary ms-auto">Dodaj Post</button>
         </div>
     </form>
-
-
 </div>
+<script>
+
+    const threadForm = document.getElementById('threadFormId')
+    const threadTitle = document.getElementById('threadTitleId')
+    const threadDescription = document.getElementById('threadDescriptionId')
+
+
+    threadForm.addEventListener('submit', (e)=>{
+
+        let threadFormData = new FormData()
+
+        formData.append('title', threadTitle.value)
+        formData.append('description', threadDescription.value)
+
+        
+        fetch("thread", {
+            method: 'post',
+            body: threadFormData
+        }).then(response => {
+            return response.text()
+        }).then(text => {
+            console.log(text)
+        }).catch(error => {
+            console.error(error)
+        })
+    })
+
+</script>

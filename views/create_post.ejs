@@ -60,7 +60,7 @@
 <script>
     let editableDiv = document.getElementById('createPostForm')
     let title = document.getElementById('input_title')
-    let thread = document.getElementById('input_thread')
+    let thread = document.getElementById('dropdownMenuLink')
     const form = document.getElementById('postForm')
     
     editableDiv.addEventListener('paste', (e)=>{
@@ -82,16 +82,13 @@
         event.preventDefault()
         let formData = new FormData()
 
-        console.log(title.value)
-        console.log(thread)
-
-
         // security problem 
         // replace innerHTML or smt
+        // I use editableDiv.innerHtml because I want have acces 
+        // to image's sources.
         formData.append('content', editableDiv.innerHTML)
         formData.append('title', title.value)
-        // doesnt find the id
-        // formData.append('thread', thread.textContent)
+        formData.append('thread', thread.textContent)
         console.log(formData.values)
 
         fetch("entry", {

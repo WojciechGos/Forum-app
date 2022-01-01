@@ -4,27 +4,33 @@ let uniqID = require('uniqid')
 const path = require('path')
 const jsdom = require('jsdom')
 const Entry = require('../model/Entry')
+const Thread = require('../model/Thread')
 const mongoose = require('mongoose')
 
 
 
 module.exports = class EntryHandler{
-    path = this._createDirectoryPath();  
+    path;
     dom;
-    user
-
+    user;
+    req_data;
 
     /*
         pass html content 
     **/
-    constructor(content, user){
-        this.dom = new jsdom.JSDOM(content.data)
+    constructor(data, user){
+        this.req_data = data
+        this.dom = new jsdom.JSDOM(data.content)
+        this.path= this._createDirectoryPath();  
+
         let id = mongoose.Types.ObjectId(user._id);
-        console.log(id.valueOf())
+        // console.log(id.valueOf())
     }
 
     /*
-        save() is main function of EntryHandler 
+        save() is main function of EntryHandler.
+        It's saves images and entry to folder
+        and all 
 
    **/
     save() {
@@ -55,10 +61,29 @@ module.exports = class EntryHandler{
         this._saveEntryContent(collection.innerHTML)
 
 
-        const entry = new Entry({
-            path:this.path,
-        })
+     
 
+    }
+
+    /*
+
+    */
+    async _saveIntoDataBase(){
+        try{
+            let thread =  await Thread.findOne({title:this.req_data.title})
+            
+            const entry = new Entry({
+                userId: user._id,
+                title: this.req_data.title,
+                thread: thread,
+                content_path: this.path,
+            })
+
+        }
+        catch(e){
+            console.error(e)
+        }
+     
     }
     /*
         It works because objects are passes by reference.
@@ -101,17 +126,16 @@ module.exports = class EntryHandler{
             if (e)
                 console.error(e)
         })
-
     }
 
 
-    
+
     _containImage(content){
         if(content.length != 0)
             return true
         return false
     }
-    
+
     async _downloadImage(link) {
         try {
 

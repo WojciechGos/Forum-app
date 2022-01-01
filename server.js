@@ -47,6 +47,7 @@ const homePageRouter = require('./routes/HomePageRouter')
 const profileRouter = require('./routes/ProfileRouter')
 const imageCreatorRouter = require('./routes/ImageCreatorRouter')
 const entryRouter = require('./routes/EntryRouter')
+const threadRouter = require('./routes/ThreadRouter')
 
 app.use(loginRouter)
 app.use(registerRouter)
@@ -54,6 +55,7 @@ app.use(homePageRouter)
 app.use(profileRouter)
 app.use(imageCreatorRouter)
 app.use(entryRouter)
+app.use(threadRouter)
 
 app.get('/logout', (req, res)=>{
     req.logOut()
