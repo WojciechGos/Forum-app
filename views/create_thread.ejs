@@ -1,6 +1,6 @@
 <div class="container">
 
-    <form id="threadFormId" enctype="multipart/form-data">
+    <form id="threadFormId" enctype="multipart/form-data" action="/thread" method="post">
         <div class="d-flex flex-column justify-content-between">
             <div class="mb-3">
                 <label for="threadTitle" class="form-label">Tytuł</label>
@@ -15,7 +15,7 @@
     </form>
 </div>
 <script>
-
+    console.log("?")
     const threadForm = document.getElementById('threadFormId')
     const threadTitle = document.getElementById('threadTitleId')
     const threadDescription = document.getElementById('threadDescriptionId')
@@ -23,11 +23,11 @@
 
     threadForm.addEventListener('submit', (e)=>{
 
+        console.log('im comin')
         let threadFormData = new FormData()
 
-        formData.append('title', threadTitle.value)
-        formData.append('description', threadDescription.value)
-
+        threadFormData.append('title', threadTitle.value)
+        threadFormData.append('description', threadDescription.value)
         
         fetch("thread", {
             method: 'post',
