@@ -1,13 +1,31 @@
 const Thread = require('../model/Thread')
 
+
+
 async function threadPost(req, res){
+    
     try{
-        const thread = new Thread({
-            title: req.body.title,
-            description: req.body.description
-        })
-        console.log(`thread obj ${thread} `)
-        await thread.save()
+        let title = req.body.title
+        let result = await Thread.findOne({title:title})
+        console.log(req.body)
+        console.log(result)
+        if(result == null){
+
+            const thread = new Thread({
+                title: title,
+                description: req.body.description
+            })
+
+            await thread.save()
+            res.status(200).send({ info: "thread is created" })
+        }
+        else{
+            
+            res.status(200).send({info:"thread is exist"})
+
+        }
+        
+       
     }
     catch(e){
         console.error(e)
