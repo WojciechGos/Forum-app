@@ -1,7 +1,7 @@
 <div class="container">
 
-    <form id="threadFormId" enctype="multipart/form-data">
-        <div class="d-flex flex-column justify-content-between">
+    <div class="d-flex flex-column justify-content-between">
+            <form id="threadFormId"  enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="threadTitle" class="form-label">Tytuł</label>
                 <input value="pyk" required type="text" class="form-control" id="threadTitleId">
@@ -10,18 +10,19 @@
                 <label for="inputContent" class="form-label">Treść</label>
                 <textarea required id="threadDescriptionId" class="form-control"  cols="120" rows="20" maxlength="1000">123</textarea>
             </div>
-            <button type="submit" class="btn btn-primary ms-auto">Dodaj Post</button>
+            <button id="threadSubmitBtnId"  class="btn btn-primary ms-auto">Dodaj Post</button>
         </div>
     </form>
 </div>
 <script>
-    console.log("?")
+
     const threadForm = document.getElementById('threadFormId')
     const threadTitle = document.getElementById('threadTitleId')
+    const threadSubmitBtn = document.getElementById('threadSubmitBtnId')
     const threadDescription = document.getElementById('threadDescriptionId')
 
 
-    threadForm.addEventListener('submit', (e)=>{
+    threadSubmitBtn.addEventListener('click', (e)=>{
 
         console.log('im comin')
         let threadFormData = new FormData()
@@ -32,11 +33,17 @@
         fetch("thread", {
             method: 'post',
             body: threadFormData
-        }).then(response => {
-            return response.text()
-        }).then(text => {
-            console.log(text)
-        }).catch(error => {
+        })
+        .then(response => {
+            return response.json()
+        })
+        .then(json => { 
+            console.log(json)
+
+            // window.location.href = json.redirect
+
+        })
+        .catch(error => {
             console.error(error)
         })
     })

@@ -8,7 +8,7 @@ async function threadPost(req, res){
         let title = req.body.title
         let result = await Thread.findOne({title:title})
         console.log(req.body)
-        console.log(result)
+
         if(result == null){
 
             const thread = new Thread({
@@ -17,7 +17,12 @@ async function threadPost(req, res){
             })
 
             await thread.save()
-            res.status(200).send({ info: "thread is created" })
+            console.log("odp")
+            
+            // there is problem
+  
+            res.json({succes:true, info:"dodano wątek", redirect:'/'})
+        
         }
         else{
             
