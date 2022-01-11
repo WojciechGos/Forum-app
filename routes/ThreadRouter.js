@@ -6,4 +6,5 @@ const threadPost = require('../controllers/ThreadController').threadPost
 
 router.post('/thread', upload.none(), threadPost)
 
+
 module.exports = router

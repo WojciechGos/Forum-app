@@ -1,26 +1,24 @@
 <div class="container">
-
     <div class="d-flex flex-column justify-content-between">
-            <form id="threadFormId"  enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="threadTitle" class="form-label">Tytuł</label>
-                <input value="pyk" required type="text" class="form-control" id="threadTitleId">
-            </div>
-            <div class="mb-3 flex-fill">
-                <label for="inputContent" class="form-label">Treść</label>
-                <textarea required id="threadDescriptionId" class="form-control"  cols="120" rows="20" maxlength="1000">123</textarea>
-            </div>
-            <button id="threadSubmitBtnId"  class="btn btn-primary ms-auto">Dodaj Post</button>
+        <div class="mb-3">
+            <label for="threadTitle" class="form-label">Tytuł</label>
+            <input value="pyk" maxlength="30" required type="text" class="form-control" id="threadTitleId">
         </div>
-    </form>
+        <div class="mb-3 flex-fill">
+            <label for="inputContent" class="form-label">Treść</label>
+            <textarea required id="threadDescriptionId" class="form-control" cols="120" rows="10"
+                maxlength="1000">123</textarea>
+        </div>
+        <button id="threadSubmitBtnId" class="btn btn-primary ms-auto">Dodaj Post</button>
+    </div>
 </div>
-<script>
 
+    
+<script>
     const threadForm = document.getElementById('threadFormId')
     const threadTitle = document.getElementById('threadTitleId')
     const threadSubmitBtn = document.getElementById('threadSubmitBtnId')
     const threadDescription = document.getElementById('threadDescriptionId')
-
 
     threadSubmitBtn.addEventListener('click', (e)=>{
 
@@ -47,5 +45,4 @@
             console.error(error)
         })
     })
-
 </script>

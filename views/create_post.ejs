@@ -1,57 +1,47 @@
 <div class="container-fluid">
-    <form method="POST" id="postForm" enctype="multipart/form-data">
-        <div class="container d-flex justify-content-between">
-            <div class="row ">
-                <div class="col">
-
-                    <label for="">Tytuł</label>
-                </div>
-                <div class="col">
-                    
-                    <input
-                    class="mb-3"
-                    type="text" 
-                    name="title"
-                    id="input_title">
-                </div>
-                
+    <div class="container d-flex justify-content-between">
+        <div class="row ">
+            <div class="col">
+    
+                <label for="">Tytuł</label>
             </div>
-            <div class="row">
-                <div class="col">
-                    <label for="">Wątek</label>
-                </div>
-                <div class="col">
-
-                    <%- include('dropdown_thread_menu') %>
-                </div>
+            <div class="col">
+    
+                <input class="mb-3" type="text" name="title" id="input_title">
+            </div>
+    
+        </div>
+        <div class="row">
+            <div class="col">
+                <label for="">Wątek</label>
+            </div>
+            <div class="col">
+    
+                <%- include('dropdown_thread_menu') %>
             </div>
         </div>
-        <div class="mb-3">
-            
-            <div class="container-fluid"
-            style="width:100%;"
-            id="createPostForm" 
-            contenteditable="true"
-            name="content">
-                <div><br></div>
-                <div><br></div>
-                <div><br></div>
-                <div><br></div>
-                <div><br></div>
-                <div><br></div>
-                <div><br></div>
-                <div><br></div>
-                <div><br></div>
-                <div><br></div>
-                <div><br></div>
-                <div><br></div>
-                <div><br></div>
-                <div><br></div>
-                <div><br></div>
-            </div>
+    </div>
+    <div class="mb-3">
+    
+        <div class="container-fluid" style="width:100%;" id="createPostForm" contenteditable="true" name="content">
+            <div><br></div>
+            <div><br></div>
+            <div><br></div>
+            <div><br></div>
+            <div><br></div>
+            <div><br></div>
+            <div><br></div>
+            <div><br></div>
+            <div><br></div>
+            <div><br></div>
+            <div><br></div>
+            <div><br></div>
+            <div><br></div>
+            <div><br></div>
+            <div><br></div>
         </div>
-        <button type="submit" class="btn btn-primary" id="createPost">Dodaj Post</button>
-    </form>
+    </div>
+    <button  class="btn btn-primary" id="entrySubmitBtnId">Dodaj Post</button>
 
 
 </div>
@@ -61,7 +51,7 @@
     let editableDiv = document.getElementById('createPostForm')
     let title = document.getElementById('input_title')
     let thread = document.getElementById('dropdownMenuLink')
-    const form = document.getElementById('postForm')
+    const entrySubmit = document.getElementById('entrySubmitBtnId')
     
     editableDiv.addEventListener('paste', (e)=>{
 
@@ -78,8 +68,8 @@
 
 
 
-    form.addEventListener('submit', function(event){
-        event.preventDefault()
+    entrySubmit.addEventListener('click', function(event){
+       
         let formData = new FormData()
 
         // security problem 
@@ -95,9 +85,9 @@
             method: 'post',
             body: formData
         }).then(response =>{
-            return response.text()
-        }).then(text =>{
-            console.log(text)
+            return response.json()
+        }).then(json =>{
+            console.log(json)
         }).catch(error=>{
             console.error(error)
         })
