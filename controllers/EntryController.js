@@ -7,6 +7,7 @@ function entryPost(req, res){
 
         let entry = new EntryHandler(req.body, req.user)
         entry.save()
+        res.json({succes:true, info:"Dodano nowy post"})
     }
     
    

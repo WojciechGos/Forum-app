@@ -14,16 +14,18 @@ module.exports = class EntryHandler{
     dom;
     user;
     req_data;
+    directoryId; // directoryId of directory
 
     /*
         pass html content 
     **/
     constructor(data, user){
+        this.directoryId = uniqID()
         this.req_data = data
         this.dom = new jsdom.JSDOM(data.content)
         this.path= this._createDirectoryPath();  
 
-        let id = mongoose.Types.ObjectId(user._id);
+        // let id = mongoose.Types.ObjectId(user._id);
         // console.log(id.valueOf())
     }
 
@@ -58,6 +60,7 @@ module.exports = class EntryHandler{
             }
         }
         // It's saves updated content (renamed sources of images)
+        // and saves necessary data into database
         this._saveEntryContent(collection.innerHTML)
 
 
@@ -68,16 +71,18 @@ module.exports = class EntryHandler{
     /*
 
     */
-    async _saveIntoDataBase(){
+    async _saveIntoDataBase(contentID){
         try{
             let thread =  await Thread.findOne({title:this.req_data.title})
             
             const entry = new Entry({
-                userId: user._id,
+               
                 title: this.req_data.title,
                 thread: thread,
                 content_path: this.path,
             })
+            await entry.save()
+            console.log("saved into db")
 
         }
         catch(e){
@@ -89,7 +94,7 @@ module.exports = class EntryHandler{
         It works because objects are passes by reference.
     **/
     _injectNewNameToImageSource(name, image){
-        image.getElementsByTagName('img')[0].src = "http://localhost:5000/"+name
+        image.getElementsByTagName('img')[0].src = "http://localhost:5000/"+this.directoryId+'/'+name
     }
     _isDataUri(image){
         if (image.substr(0, 5) == "data:")
@@ -161,9 +166,14 @@ module.exports = class EntryHandler{
     **/
 
     _saveEntryContent(content){
-        let destinationPath = `${this.path}/${uniqID()}.html`
+        let contentID = uniqID()
+        let destinationPath = `${this.path}/${contentID}.html`
+        
         fs.writeFile(destinationPath, content, (e)=>{
-            if(e) console.error(e)
+            if(e) 
+                console.error(e)
+            else
+                this._saveIntoDataBase(contentID)
         })
     }
 
@@ -174,8 +184,7 @@ module.exports = class EntryHandler{
     **/
 
     _createDirectoryPath() {
-        let id = uniqID()
-        let path = `${__dirname}/../Data/Entries/` + id
+        let path = `${__dirname}/../Data/Entries/` + this.directoryId
         fs.mkdir(path, (e) => {
             if (e)
                 console.error(e)
