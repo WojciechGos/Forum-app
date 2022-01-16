@@ -17,7 +17,9 @@ async function entryGet(req, res){
 
         const entry = await Entry.findOne({title:'test1'})
         res.render('tmp2', { data: entry })
-    }catch(e){
+
+    }
+    catch(e){
         console.error(e)
     }
   

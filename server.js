@@ -40,6 +40,7 @@ app.use(passport.session());
 
 app.use(express.static('views'));
 
+
 // routes
 const loginRouter = require('./routes/LoginRouter')
 const registerRouter = require('./routes/RegisterRouter')
@@ -48,7 +49,9 @@ const profileRouter = require('./routes/ProfileRouter')
 const imageCreatorRouter = require('./routes/ImageCreatorRouter')
 const entryRouter = require('./routes/EntryRouter')
 const threadRouter = require('./routes/ThreadRouter')
+const apiImageRouter = require('./routes/API/imageRouter')
 
+app.use(apiImageRouter)
 app.use(loginRouter)
 app.use(registerRouter)
 app.use(homePageRouter)

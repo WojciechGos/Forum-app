@@ -94,7 +94,7 @@ module.exports = class EntryHandler{
         It works because objects are passes by reference.
     **/
     _injectNewNameToImageSource(name, image){
-        image.getElementsByTagName('img')[0].src = "http://localhost:5000/"+this.directoryId+'/'+name
+        image.getElementsByTagName('img')[0].src = "http://localhost:5000/image/"+this.directoryId+'/'+name
     }
     _isDataUri(image){
         if (image.substr(0, 5) == "data:")
@@ -184,7 +184,7 @@ module.exports = class EntryHandler{
     **/
 
     _createDirectoryPath() {
-        let path = `${__dirname}/../Data/Entries/` + this.directoryId
+        let path = `${process.env.PATH}/../Data/Entries/` + this.directoryId
         fs.mkdir(path, (e) => {
             if (e)
                 console.error(e)
