@@ -4,15 +4,12 @@ const {Schema} = mongoose;
 const entrySchema = new Schema({
     userId: {
         type: mongoose.Types.ObjectId,
-        // required: true
     },
     title: {
         type: String,
-        // required:true
     },
     thread: {
         type: mongoose.Types.ObjectId,
-        // required: true
     },
     date:{
         type: Date,
@@ -21,6 +18,7 @@ const entrySchema = new Schema({
     content_path: {
         type: String,
     },
+    file_name: String,
     comment: Array
 
 });

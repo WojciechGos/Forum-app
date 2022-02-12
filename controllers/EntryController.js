@@ -7,6 +7,7 @@ function entryPost(req, res){
 
         let entry = new EntryWriter(req.body, req.user)
         entry.save()
+        console.log("added new entry!")
         res.json({succes:true, info:"Dodano nowy post"})
     }
     

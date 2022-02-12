@@ -74,10 +74,10 @@ module.exports.EntryWriter = class EntryWriter{
             let thread =  await Thread.findOne({title:this.req_data.title})
             
             const entry = new Entry({
-               
                 title: this.req_data.title,
                 thread: thread,
                 content_path: pathOS.normalize(this.path),
+                file_name: `${contentID}.html`
             })
             await entry.save()
             console.log("saved into db")
@@ -216,18 +216,29 @@ module.exports.EntryWriter = class EntryWriter{
 
 module.exports.EntryReader = class EntryReader{
 
-    constructor(date, index, thread){
-        this._getEntry(date, index, thread)
-    }
-
-    async _getEntry(date, index, thread){
+    async getEntry(date, index, thread){   
         try{
-            return await Entry.find({ date: { $lt: date } }).skip(index-1).limit(1)
-        }
+
+            const entry = await this._findEntryBy(date, index, thread)
+            console.log(`getEntry: ${entry}`)
+            let file_path = `${entry.content_path}/${entry.file_name}`
+            console.log(`getEntry: ${file_path}`)
+            return pathOS.resolve(file_path)  
+        }   
         catch(e){
             console.error(e)
-        }
+        }  
     }
+
+    async _findEntryBy(date, index, thread){
+        if (thread == null)
+            return await Entry.find({ date: { $lt: date } }).skip(index - 1).limit(1).exec()
+                
+        else
+            return await Entry.find({ date: { $lt: date }, thread: thread }).skip(index - 1).limit(1).exec()
+    }
+
+
 
 
 
