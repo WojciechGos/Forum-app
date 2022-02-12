@@ -50,6 +50,7 @@ const imageCreatorRouter = require('./routes/ImageCreatorRouter')
 const entryRouter = require('./routes/EntryRouter')
 const threadRouter = require('./routes/ThreadRouter')
 const apiImageRouter = require('./routes/API/imageRouter')
+const apiEntryRouter = require('./routes/API/EntryRouter')
 
 app.use(apiImageRouter)
 app.use(loginRouter)
@@ -59,6 +60,7 @@ app.use(profileRouter)
 app.use(imageCreatorRouter)
 app.use(entryRouter)
 app.use(threadRouter)
+app.use(apiEntryRouter)
 
 app.get('/logout', (req, res)=>{
     req.logOut()

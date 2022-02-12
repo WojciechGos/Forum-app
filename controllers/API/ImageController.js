@@ -1,6 +1,6 @@
+const path = require('path')
 
-
-let path = `${process.env.PATH}/Data/Entries`
+// let path = `${process.env.PATH}/Data/Entries`
 
 async function imageApiGet(req, res){
 
@@ -10,7 +10,7 @@ async function imageApiGet(req, res){
     let imagePath = `${__dirname}/../../Data/Entries/${req.params.folder}/${req.params.name}`
 
     console.log(imagePath)
-    res.sendFile(imagePath)
+    res.sendFile(path.resolve(imagePath))
 }
 
 module.exports.imageApiGet = imageApiGet

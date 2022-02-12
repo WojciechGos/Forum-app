@@ -1,15 +1,13 @@
 const fs = require('fs')
 const fetch = require('cross-fetch')
 let uniqID = require('uniqid')
-const path = require('path')
+const pathOS = require('path')
 const jsdom = require('jsdom')
 const Entry = require('../model/Entry')
 const Thread = require('../model/Thread')
-const mongoose = require('mongoose')
 
 
-
-module.exports = class EntryHandler{
+module.exports.EntryWriter = class EntryWriter{
     path;
     dom;
     user;
@@ -79,7 +77,7 @@ module.exports = class EntryHandler{
                
                 title: this.req_data.title,
                 thread: thread,
-                content_path: this.path,
+                content_path: pathOS.normalize(this.path),
             })
             await entry.save()
             console.log("saved into db")
@@ -184,7 +182,7 @@ module.exports = class EntryHandler{
     **/
 
     _createDirectoryPath() {
-        let path = `${process.env.PATH}/../Data/Entries/` + this.directoryId
+        let path = `${__dirname}/../Data/Entries/` + this.directoryId
         fs.mkdir(path, (e) => {
             if (e)
                 console.error(e)
@@ -216,11 +214,24 @@ module.exports = class EntryHandler{
 
 
 
+module.exports.EntryReader = class EntryReader{
+
+    constructor(date, index, thread){
+        this._getEntry(date, index, thread)
+    }
+
+    async _getEntry(date, index, thread){
+        try{
+            return await Entry.find({ date: { $lt: date } }).skip(index-1).limit(1)
+        }
+        catch(e){
+            console.error(e)
+        }
+    }
 
 
 
-
-
+}
 
 
 

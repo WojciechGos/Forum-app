@@ -1,5 +1,7 @@
 const Data = require('../Utils/Data')
 
+
+
 function homePageGet(req, res){
     Data.getMainUserData(req.user)
         .then((data)=>{
