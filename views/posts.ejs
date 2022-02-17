@@ -11,7 +11,7 @@
         </div>
         <div class="row my-4">
             <h4 class="card-title mb-3">Opel Astra klasa g</h4>
-            <p class="card-text">
+            <p class="card-text"> 
             <div>POST 1</div>
             <div><img src="http://localhost:5000/image/166lxs62ckz8sqcqg/166lxs62ckz8sqdwj.png" alt=""
                     style="color: var(--bs-body-color); font-family: var(--bs-body-font-family); font-size: var(--bs-body-font-size); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);"
@@ -26,25 +26,113 @@
 </div>
 
 <script>
+    
+    // function addEntry(username, thread, date, entry){
+        // let entry = 
+        // `<div class="card container-fluid">
+        //         <div class="card-body">
+        //             <div class="row d-flex">
+        //                 <div class="col">
+        //                     ${username}
+        //                 </div>
+        //                 <div class="col">
+        //                     ${thread}
+        //                 </div>
+        //                 <div class="col">
+        //                     ${date}
+        //                 </div>
+        //             </div>
+        //             <div class="row my-4">
+        //                 <h4 class="card-title mb-3">Opel Astra klasa g</h4>
+        //                 <p class="card-text">
+        //                     ${entry}
+                            
+        //                 </p>
+        //             </div>
+        //             <div class="row">
+        //                 <p class="card-text">komentarze</p>
+        //             </div>
+        //         </div>
 
-    fetch('entry/2022-02-09T19:31:24.042Z/1/motoryzacja',{
-        method:"GET"
-
-    })
-    .then(response =>{
-        console.log(response)
-
-    })
-    .catch(e=>{
-        console.error(e)
+        //     </div>`
         
+    // }
+ 
+  
+    const post_container = document.querySelector('.post-container')
+
+    let index= 0
+    let thread = null
+    let currentDate = Date.now()
+
+
+
+    document.addEventListener('scroll', e=>{
+        
+        if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
+
+            // for(let i=index; i<5; ++i){
+            //     fetchAndAddEntry(currentDate, i, 'undefined')
+            // }
+            // index += 5
+        }
+
     })
 
-        
+    function addEntry(data){
+        let entry =
+            `<div class="card container-fluid">
+                <div class="card-body">
+                    <div class="row d-flex">
+                        <div class="col">
+                             Wojtek Gos
+                        </div>
+                        <div class="col">
+                           r/motoryzacja
+                        </div>
+                        <div class="col">
+                           data: 25/08/2021
+                        </div>
+                    </div>
+                    <div class="row my-4">
+                        <h4 class="card-title mb-3">Opel Astra klasa g</h4>
+                        <p class="card-text">
+                            ${data}
+                            
+                        </p>
+                    </div>
+                    <div class="row">
+                        <p class="card-text">komentarze</p>
+                    </div>
+                </div>
 
-    function makeRequest(){
-
+            </div>`
+    
+        post_container.innerHTML += entry
+         
     }
+
+    function fetchAndAddEntry(date, index, thread) {
+        let link = `entry/${date}/${index}/${thread}`
+        fetch(link, {
+            method: "GET"
+
+        })
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            console.log(data)
+            addEntry(data)
+        })
+        .catch(e => {
+            console.error(e)
+
+        })
+    }
+    
+        
+    fetchAndAddEntry('2022-02-14T10:44:55.501Z', 0, 'undefined')
 
 </script>
         

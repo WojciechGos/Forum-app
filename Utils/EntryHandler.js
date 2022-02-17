@@ -215,27 +215,42 @@ module.exports.EntryWriter = class EntryWriter{
 
 
 module.exports.EntryReader = class EntryReader{
-
+   
     async getEntry(date, index, thread){   
         try{
-
-            const entry = await this._findEntryBy(date, index, thread)
+            let entry = await this._findEntryBy(date, index, thread)
             console.log(`getEntry: ${entry}`)
-            let file_path = `${entry.content_path}/${entry.file_name}`
+//  
+            // console.log(entry.content_path)
+            let file_path = `${entry[0].content_path}/${entry[0].file_name}`
             console.log(`getEntry: ${file_path}`)
             return pathOS.resolve(file_path)  
-        }   
+        }
         catch(e){
             console.error(e)
-        }  
+        }
     }
+  
 
-    async _findEntryBy(date, index, thread){
+    _findEntryBy(date, index, thread){
+        console.log(thread)
         if (thread == null)
-            return await Entry.find({ date: { $lt: date } }).skip(index - 1).limit(1).exec()
+            return  Entry.find({ date: { $lt: date } })
+            .skip(index)
+            .limit(1)
+            .then(result=>{
+                return result;
+            })
                 
         else
-            return await Entry.find({ date: { $lt: date }, thread: thread }).skip(index - 1).limit(1).exec()
+            return  Entry.find({ 
+                date: { $lt: date }, 
+                thread: thread })
+            .skip(index)
+            .limit(1)
+            .then(result=>{
+                return result
+            })
     }
 
 
