@@ -12,11 +12,13 @@ async function entryGet(req, res){
     const thread = req.params.thread
     const entry = new EntryReader()
     let file_path = await entry.getEntry(date, index)
+    let response = {}
     
     console.log(`entryGet: ${file_path}`)
     fs.readFile(file_path, (err, data)=>{
         if(err)
             console.error(err)
+        
         console.log(data.toString())            
     })
     // res.sendFile(file_path)
