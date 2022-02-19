@@ -5,6 +5,7 @@ const pathOS = require('path')
 const jsdom = require('jsdom')
 const Entry = require('../model/Entry')
 const Thread = require('../model/Thread')
+const { profile } = require('console')
 
 
 module.exports.EntryWriter = class EntryWriter{
@@ -215,39 +216,86 @@ module.exports.EntryWriter = class EntryWriter{
 
 
 module.exports.EntryReader = class EntryReader{
+    entry
+
+    constructor(date, index, thread){   
+        this.entry = this._findEntryBy(date, index, thread)
+            .then(data=>{
+                return data
+            })    
+            .catch(e=>{
+                console.error(e)
+            })
+    }
    
-    async getEntry(date, index, thread){   
+    async getEntryData(){   
+        let title = this._getTitle()
+        let user_data = this._getUserData()
+        let thread = this._getThread()
+        let date = this._getDate()
+
+        let file_path = this._getFilePath()
+        let content = fs.readFile(file_path, (err, data)=>{
+            if(err){
+                throw err
+            }
+            return data.toString()
+        })
+
+        return {
+            title: title,
+            user_name: user_data.name,
+            user_profil: profileImage,
+            thread: thread,
+            date: date,
+            content: content
+        }
+
+    }
+
+    _getFilePath(){
+        let file_path = `${this.entry[0].content_path}/${this.entry[0].file_name}`
+        console.log(`_getEntryData: ${file_path}`)
+        return pathOS.resolve(file_path) 
+
+    }
+
+    async _getUserData(){
         try{
-            let entry = await this._findEntryBy(date, index, thread)
-            console.log(`getEntry: ${entry}`)
-//  
-            // console.log(entry.content_path)
-            let file_path = `${entry[0].content_path}/${entry[0].file_name}`
-            console.log(`getEntry: ${file_path}`)
-            return pathOS.resolve(file_path)  
+            return await Entry.findOne({userId: this.entry[0].userId})
         }
         catch(e){
-            console.error(e)
+            console.error("EntryReader: Can't load User Data from database")
         }
     }
-  
+
+    _getTitle(){
+        return this.entry[0].title
+    }
+    
+    _getDate(){
+        return this.entry[0].date
+    }
+
+    _getThread(){
+        return this.entry[0].thread
+    }
+    
 
     _findEntryBy(date, index, thread){
         console.log(thread)
         if (thread == null)
-            return  Entry.find({ date: { $lt: date } })
+            return  Entry.findOne({ date: { $lt: date } })
             .skip(index)
-            .limit(1)
             .then(result=>{
                 return result;
             })
                 
         else
-            return  Entry.find({ 
+            return  Entry.findOne({ 
                 date: { $lt: date }, 
                 thread: thread })
             .skip(index)
-            .limit(1)
             .then(result=>{
                 return result
             })
