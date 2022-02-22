@@ -4,8 +4,8 @@ let uniqID = require('uniqid')
 const pathOS = require('path')
 const jsdom = require('jsdom')
 const Entry = require('../model/Entry')
+const User= require('../model/User')
 const Thread = require('../model/Thread')
-const { profile } = require('console')
 
 
 module.exports.EntryWriter = class EntryWriter{
@@ -218,90 +218,93 @@ module.exports.EntryWriter = class EntryWriter{
 module.exports.EntryReader = class EntryReader{
     entry
 
-    constructor(date, index, thread){   
-        this.entry = this._findEntryBy(date, index, thread)
-            .then(data=>{
-                return data
-            })    
-            .catch(e=>{
-                console.error(e)
-            })
-    }
+  
    
-    async getEntryData(){   
-        let title = this._getTitle()
-        let user_data = this._getUserData()
-        let thread = this._getThread()
-        let date = this._getDate()
+    async getEntryData(date, index){   
+        this.entry = await this._findEntryBy(date, index)
+        console.log(`entry: ${this.entry}`)
 
+        let title = this._getTitle()
+        let user_data = await this._getUserData()
+        console.log(`user_data: ${user_data}`)
+        let thread_entry = this._getThread()
+        let date_entry = this._getDate()
         let file_path = this._getFilePath()
-        let content = fs.readFile(file_path, (err, data)=>{
-            if(err){
-                throw err
-            }
-            return data.toString()
-        })
+        let content = await this._getContent(file_path)
 
         return {
             title: title,
             user_name: user_data.name,
-            user_profil: profileImage,
-            thread: thread,
-            date: date,
+            user_profil: user_data.profileImage,
+            thread: thread_entry,
+            date: date_entry,
             content: content
         }
+        
+    
 
     }
 
+    _findEntryBy(date, index, thread) {
+        console.log(`_findEntryBy: date = ${date}`)
+        if (thread === 'undefined')
+            return Entry.findOne({ 
+                date: { $lt: new Date(date) } })
+                .skip(index)
+                .then(result => {
+                    console.log(`result without thread: ${result}`)
+                    return result;
+                })
+
+        else
+            return Entry.findOne({
+                date: { $lt: new Date(date) },
+                thread: thread
+            })
+                .skip(index)
+                .then(result => {
+                    console.log(`result with thread: ${result}`)
+                    return result
+                })
+    }
+
+    _getContent(file_path){
+        return new Promise((resolve, reject)=>{
+            fs.readFile(file_path, (err, content) => {
+                if (err) {
+                    reject(`error cannot read content of file ${file_path}`)
+                    return
+                }
+                console.log(content)
+                resolve(content.toString())
+            })
+        })
+    }
+
     _getFilePath(){
-        let file_path = `${this.entry[0].content_path}/${this.entry[0].file_name}`
-        console.log(`_getEntryData: ${file_path}`)
+        let file_path = `${this.entry.content_path}/${this.entry.file_name}`
         return pathOS.resolve(file_path) 
 
     }
 
-    async _getUserData(){
-        try{
-            return await Entry.findOne({userId: this.entry[0].userId})
-        }
-        catch(e){
-            console.error("EntryReader: Can't load User Data from database")
-        }
+    _getUserData(){
+        return User.findOne({userId: this.entry.userId})
     }
 
     _getTitle(){
-        return this.entry[0].title
+        return this.entry.title
     }
     
     _getDate(){
-        return this.entry[0].date
+        return this.entry.date
     }
 
     _getThread(){
-        return this.entry[0].thread
+        return this.entry.thread
     }
     
 
-    _findEntryBy(date, index, thread){
-        console.log(thread)
-        if (thread == null)
-            return  Entry.findOne({ date: { $lt: date } })
-            .skip(index)
-            .then(result=>{
-                return result;
-            })
-                
-        else
-            return  Entry.findOne({ 
-                date: { $lt: date }, 
-                thread: thread })
-            .skip(index)
-            .then(result=>{
-                return result
-            })
-    }
-
-
+ 
 
 
 

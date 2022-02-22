@@ -4,21 +4,21 @@ const fs = require('fs')
 
 async function entryGet(req, res){
 
-    // const date = new Date(req.params.date)
+    const date = new Date(req.params.date).toISOString()
+
     // const index = req.params.index
     // const thread = req.params.thread
-    console.log("entryGET: AAAA")
-    const date = new Date("2022-02-14T09:44:55.501Z")
+    
+    console.log("entryGET: Starts searching for an entry")
     const index = 1
-    const thread = 'undefined'
-
-    const entry = new EntryReader(date, index, thread)
-
-
-  
-
-   
-
-}
+    const thread = "motoryzacja"
+    
+    console.log(`date client: ${date}`)
+    
+    const entry = new EntryReader()
+    let response = await entry.getEntryData(date, index) 
+    console.log(response)
+    res.json(response)
+}   
 
 module.exports.entryGet = entryGet
