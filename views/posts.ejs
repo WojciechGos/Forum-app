@@ -1,4 +1,4 @@
-<div class="card container-fluid">
+<!-- <div class="card container-fluid">
     <div class="card-body">
         <div class="row d-flex">
             <div class="col">
@@ -23,42 +23,11 @@
         </div>
     </div>
     
-</div>
+</div> -->
 
 <script>
     
-    // function addEntry(username, thread, date, entry){
-        // let entry = 
-        // `<div class="card container-fluid">
-        //         <div class="card-body">
-        //             <div class="row d-flex">
-        //                 <div class="col">
-        //                     ${username}
-        //                 </div>
-        //                 <div class="col">
-        //                     ${thread}
-        //                 </div>
-        //                 <div class="col">
-        //                     ${date}
-        //                 </div>
-        //             </div>
-        //             <div class="row my-4">
-        //                 <h4 class="card-title mb-3">Opel Astra klasa g</h4>
-        //                 <p class="card-text">
-        //                     ${entry}
-                            
-        //                 </p>
-        //             </div>
-        //             <div class="row">
-        //                 <p class="card-text">komentarze</p>
-        //             </div>
-        //         </div>
-
-        //     </div>`
-        
-    // }
- 
-  
+    
     const post_container = document.querySelector('.post-container')
 
     let index= 0
@@ -71,34 +40,40 @@
         
         if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
 
-            // for(let i=index; i<5; ++i){
-            //     fetchAndAddEntry(currentDate, i, 'undefined')
-            // }
-            // index += 5
+            for(let i=index; i<2; ++i){
+                fetchAndAddEntry(currentDate, i, 'none')
+            }
+            index += 5
         }
 
     })
 
-    function addEntry(data){
-        let entry =
-            `<div class="card container-fluid">
+    function addEntry(data) {
+        let user_name = data.user_name
+        let thread = data.thread
+        let date = data.date
+        let title = data.title
+        let content = data.content
+            let entry =
+                `<div class="card container-fluid">
                 <div class="card-body">
                     <div class="row d-flex">
                         <div class="col">
-                             Wojtek Gos
+                            ${user_name}
                         </div>
                         <div class="col">
-                           r/motoryzacja
+                            ${thread}
                         </div>
                         <div class="col">
-                           data: 25/08/2021
+                            ${date}
                         </div>
                     </div>
                     <div class="row my-4">
-                        <h4 class="card-title mb-3">Opel Astra klasa g</h4>
+                        <h4 class="card-title mb-3">
+                            ${title}
+                        </h4>
                         <p class="card-text">
-                            ${data}
-                            
+                            ${content}   
                         </p>
                     </div>
                     <div class="row">
@@ -107,33 +82,35 @@
                 </div>
 
             </div>`
-    
         post_container.innerHTML += entry
-         
     }
+
+    
+
+ 
 
     function fetchAndAddEntry(date, index, thread) {
         let link = `entry/${date}/${index}/${thread}`
         fetch(link, {
             method: "GET"
-
         })
         .then(response => {
-            return response.text()
+            return response.json()
         })
         .then(data => {
             console.log(data)
-            addEntry(data)
+            if(data.succes== false)
+                console.log(data.info)
+            else
+                addEntry(data)
         })
         .catch(e => {
             console.error(e)
 
         })
     }
-    
-        
-    fetchAndAddEntry('2022-02-14T10:44:55.501Z', 0, 'undefined')
+
+    fetchAndAddEntry(new Date(), 0, 'none')
+    fetchAndAddEntry(new Date(), 1, 'none')
 
 </script>
-        
-   

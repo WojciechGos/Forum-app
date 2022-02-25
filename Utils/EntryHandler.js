@@ -220,19 +220,24 @@ module.exports.EntryReader = class EntryReader{
 
   
    
-    async getEntryData(date, index){   
-        this.entry = await this._findEntryBy(date, index)
+    async getEntryData(date, index, thread){   
+        this.entry = await this._findEntryBy(date, index, thread)
         console.log(`entry: ${this.entry}`)
+        if(this.entry === null)
+            return{
+                succes: false,
+                info: "Nie ma więcej postów"
+            }
 
         let title = this._getTitle()
         let user_data = await this._getUserData()
-        console.log(`user_data: ${user_data}`)
         let thread_entry = this._getThread()
         let date_entry = this._getDate()
         let file_path = this._getFilePath()
         let content = await this._getContent(file_path)
 
         return {
+            succes: true,
             title: title,
             user_name: user_data.name,
             user_profil: user_data.profileImage,
@@ -244,10 +249,10 @@ module.exports.EntryReader = class EntryReader{
     
 
     }
-
-    _findEntryBy(date, index, thread) {
-        console.log(`_findEntryBy: date = ${date}`)
-        if (thread === 'undefined')
+    // TODO check why it doenst return other entries when index increase
+    
+    async _findEntryBy(date, index, thread) {
+        if (thread == 'none')
             return Entry.findOne({ 
                 date: { $lt: new Date(date) } })
                 .skip(index)
@@ -256,16 +261,30 @@ module.exports.EntryReader = class EntryReader{
                     return result;
                 })
 
-        else
+        else{
+            let threadId = await this._getThreadId(this._getThread)
+            console.log(`threadId ${threadId}`)
             return Entry.findOne({
                 date: { $lt: new Date(date) },
-                thread: thread
-            })
+                thread: threadId
+                })
                 .skip(index)
                 .then(result => {
                     console.log(`result with thread: ${result}`)
                     return result
                 })
+        }
+    }
+    _getThreadId(thread){
+        return new Promise((resolve, reject)=>{
+            Thread.findOne({title : thread})
+            .then(result=>{
+                resolve(result)
+            })
+            .catch(e=>{
+                reject(e)
+            })
+        })
     }
 
     _getContent(file_path){
@@ -273,9 +292,7 @@ module.exports.EntryReader = class EntryReader{
             fs.readFile(file_path, (err, content) => {
                 if (err) {
                     reject(`error cannot read content of file ${file_path}`)
-                    return
                 }
-                console.log(content)
                 resolve(content.toString())
             })
         })

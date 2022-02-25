@@ -3,20 +3,18 @@ const fs = require('fs')
 
 
 async function entryGet(req, res){
+    console.log("entryGET: Starts searching for an entry")
 
     const date = new Date(req.params.date).toISOString()
-
-    // const index = req.params.index
-    // const thread = req.params.thread
+    const index = req.params.index
+    const thread = req.params.thread
     
-    console.log("entryGET: Starts searching for an entry")
-    const index = 1
-    const thread = "motoryzacja"
-    
-    console.log(`date client: ${date}`)
     
     const entry = new EntryReader()
-    let response = await entry.getEntryData(date, index) 
+
+    
+
+    let response = await entry.getEntryData(date, index, thread) 
     console.log(response)
     res.json(response)
 }   
