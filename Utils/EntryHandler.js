@@ -223,7 +223,7 @@ module.exports.EntryReader = class EntryReader{
     async getEntryData(date, index, thread){   
         this.entry = await this._findEntryBy(date, index, thread)
         console.log(`entry: ${this.entry}`)
-        if(this.entry === null)
+        if(this.entry[0] === null || this.entry[0] === undefined)
             return{
                 succes: false,
                 info: "Nie ma więcej postów"
@@ -249,32 +249,34 @@ module.exports.EntryReader = class EntryReader{
     
 
     }
-    // TODO check why it doenst return other entries when index increase
-    
     async _findEntryBy(date, index, thread) {
+
         if (thread == 'none')
-            return Entry.findOne({ 
+            return Entry.find({ 
                 date: { $lt: new Date(date) } })
                 .skip(index)
+                .sort({$natural:-1})
+                .limit(1)
                 .then(result => {
-                    console.log(`result without thread: ${result}`)
                     return result;
                 })
-
         else{
             let threadId = await this._getThreadId(this._getThread)
-            console.log(`threadId ${threadId}`)
+            // console.log(`threadId ${threadId}`)
             return Entry.findOne({
                 date: { $lt: new Date(date) },
                 thread: threadId
                 })
                 .skip(index)
+                .limit(1)
                 .then(result => {
-                    console.log(`result with thread: ${result}`)
                     return result
                 })
         }
     }
+
+
+
     _getThreadId(thread){
         return new Promise((resolve, reject)=>{
             Thread.findOne({title : thread})
@@ -299,25 +301,25 @@ module.exports.EntryReader = class EntryReader{
     }
 
     _getFilePath(){
-        let file_path = `${this.entry.content_path}/${this.entry.file_name}`
+        let file_path = `${this.entry[0].content_path}/${this.entry[0].file_name}`
         return pathOS.resolve(file_path) 
 
     }
 
     _getUserData(){
-        return User.findOne({userId: this.entry.userId})
+        return User.findOne({ userId: this.entry[0].userId})
     }
 
     _getTitle(){
-        return this.entry.title
+        return this.entry[0].title
     }
     
     _getDate(){
-        return this.entry.date
+        return this.entry[0].date
     }
 
     _getThread(){
-        return this.entry.thread
+        return this.entry[0].thread
     }
     
 

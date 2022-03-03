@@ -36,7 +36,7 @@ async function authenticateUser(username, password, done){
             return done(null, false, {message: 'Password incorrect'})
         }
     }catch(err){
-         return done(err);
+        return done(err);
     }
 }
 

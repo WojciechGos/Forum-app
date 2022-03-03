@@ -1,53 +1,78 @@
-<!-- <div class="card container-fluid">
-    <div class="card-body">
-        <div class="row d-flex">
-            <div class="col">
-                Wojtek Gos
-            </div>
-            <div class="col">
-                r/motoryzacja
-            </div>
-            <div class="col">data: 25/08/2021</div>   
-        </div>
-        <div class="row my-4">
-            <h4 class="card-title mb-3">Opel Astra klasa g</h4>
-            <p class="card-text"> 
-            <div>POST 1</div>
-            <div><img src="http://localhost:5000/image/166lxs62ckz8sqcqg/166lxs62ckz8sqdwj.png" alt=""
-                    style="color: var(--bs-body-color); font-family: var(--bs-body-font-family); font-size: var(--bs-body-font-size); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);"
-                    class="img-fluid"></div>
-            </p>    
-        </div>
-        <div class="row">
-            <p class="card-text">komentarze</p>
-        </div>
-    </div>
-    
-</div> -->
+
+<style type="text/css" scoped>
+    .entry_finish_container{
+        width: 100%;
+        height: 10vh;
+        display: flex;
+        justify-content: center;
+    }
+</style>
+
 
 <script>
     
     
     const post_container = document.querySelector('.post-container')
-
-    let index= 0
+    let block = false
+    let index= 2
     let filter_thread = null
-    let currentDate = Date.now()
-
-
-
+    let currentDate = new Date().toISOString()
+    initEntries()
     document.addEventListener('scroll', e=>{
+        let entry
         
         if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
-
-            for(let i=index; i<2; ++i){
-                fetchAndAddEntry(currentDate, i, 'none')
+            for(let i=index; i<index+5; ++i){
+                fetchAndAddEntry(i)
             }
             index += 5
         }
 
     })
+    function blockFetch(){
+        block = true
+    }
+    function isFetchBlocked(){
+        return block
+    }
+    function initEntries(){
+        for(let i=0; i<4; ++i){
+            fetchAndAddEntry(i)
+        }
+        index = 4
+        
+    }
+    function showError(){
+        post_container += `
+        <div class="entry_finish_container" >
+            <button class="btn btn-primary">
+                załaduj post
+            </button>
+        </div>
+        `
+    }
 
+    async function fetchAndAddEntry(i){
+        if(isFetchBlocked()){
+            return 
+        }
+        entry = await fetchEntry(currentDate, i, 'none')
+        
+        console.log('recognizing ')
+        if (entry.succes) {
+            console.log("adding entry")
+            addEntry(entry)
+        }
+        else {
+            console.log('there is no entry')
+            blockFetch()
+            showError()
+            // show info with button that enable refreshing info 
+        }
+    }
+
+
+  
     function addEntry(data) {
         let user_name = data.user_name
         let thread = data.thread
@@ -89,20 +114,17 @@
 
  
 
-    function fetchAndAddEntry(date, index, thread) {
+    function fetchEntry(date, index, thread) {
+        console.log(date)
         let link = `entry/${date}/${index}/${thread}`
-        fetch(link, {
+        return fetch(link, {
             method: "GET"
         })
         .then(response => {
             return response.json()
         })
         .then(data => {
-            console.log(data)
-            if(data.succes== false)
-                console.log(data.info)
-            else
-                addEntry(data)
+            return data
         })
         .catch(e => {
             console.error(e)
@@ -110,7 +132,5 @@
         })
     }
 
-    fetchAndAddEntry(new Date(), 0, 'none')
-    fetchAndAddEntry(new Date(), 1, 'none')
 
 </script>
