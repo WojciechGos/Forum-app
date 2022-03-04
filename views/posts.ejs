@@ -14,6 +14,7 @@
     
     const post_container = document.querySelector('.post-container')
     let block = false
+    let errorShow = false
     let index= 2
     let filter_thread = null
     let currentDate = new Date().toISOString()
@@ -21,11 +22,13 @@
     document.addEventListener('scroll', e=>{
         let entry
         
-        if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
+        if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight && !isFetchBlocked()) {
             for(let i=index; i<index+5; ++i){
                 fetchAndAddEntry(i)
+                
             }
-            index += 5
+        }else if(((window.innerHeight + window.scrollY) >= document.body.scrollHeight) && isFetchBlocked()){
+            showError()
         }
 
     })
@@ -42,14 +45,20 @@
         index = 4
         
     }
+    function isErrorShowed(){
+        return errorShow
+    }
     function showError(){
-        post_container += `
-        <div class="entry_finish_container" >
-            <button class="btn btn-primary">
-                załaduj post
-            </button>
-        </div>
-        `
+        if(!isErrorShowed()){
+            errorShow = true
+            post_container.innerHTML += `
+            <div class="entry_finish_container" >
+                <button class="btn btn-primary">
+                    załaduj post
+                    </button>
+                    </div>
+                    `
+        }
     }
 
     async function fetchAndAddEntry(i){
@@ -66,7 +75,7 @@
         else {
             console.log('there is no entry')
             blockFetch()
-            showError()
+            
             // show info with button that enable refreshing info 
         }
     }

@@ -3,18 +3,6 @@ const bcrypt = require('bcrypt');
 const User = require('../model/User')
 const passport = require('passport')
 
-/* TODO
-
-TypeError: req.flash is not a function
-    at allFailed (C:\xampp\htdocs\projekty\node\forum\node_modules\passport\lib\middleware\authenticate.js:131:15)
-    at attempt (C:\xampp\htdocs\projekty\node\forum\node_modules\passport\lib\middleware\authenticate.js:180:28)
-    at Strategy.strategy.fail (C:\xampp\htdocs\projekty\node\forum\node_modules\passport\lib\middleware\authentiddleware\authenticate.js:302:9)
-    at verified (C:\xampp\htdocs\projekty\node\forum\node_modules\passport-local\lib\strategy.js:82:30)        js:82:30)                                                                                     port.js:17:16)   
-    at Strategy.authenticateUser [as _verify] (C:\xampp\htdocs\projekty\node\forum\config\passport.js:17:16)
-
-
-*/
-
 async function authenticateUser(username, password, done){
     
     let user
