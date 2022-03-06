@@ -5,11 +5,14 @@ const passport = require('passport')
 
 router.get('/login', loginGet);
 
-router.post('/login', passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/login',
-    failureFlash: true
-}))
+// router.post('/login', passport.authenticate('local', {
+//     successRedirect: '/',
+//     failureRedirect: '/',
+//     failureFlash: true
+// }))
 
+router.post('/login', (req, res)=>{
+    console.log(req.body)
+})
     
 module.exports = router;
