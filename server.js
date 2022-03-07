@@ -24,10 +24,12 @@ const sessionStore = MongoStore.create({
 
 app.set('view engine', 'ejs');
 
-app.use(express.urlencoded({extended: false}));
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
 app.use(flash())
 app.use(methodOverride('_method'))
+
 app.use(session({
     secret: process.env.SECRET,
     store: sessionStore,
