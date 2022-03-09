@@ -1,25 +1,30 @@
+<style type="text/css" scoped>
 
+    .login_error_message{
+        color: red;
+    }
+
+
+</style>
 
     <div class="container">
-        <% if (messages.error) { %>
-            <%= messages.error %>
-        <% } %>
+        <div class="mb-3">
+            <label for="UserName" class="form-label">Nazwa Użytkownika</label>
+            <input type="text" class="form-control" id="loginInputUserName" name="username">
         
-            <div class="mb-3">
-                <label for="UserName" class="form-label">Nazwa Użytkownika</label>
-                <input type="text" class="form-control" id="loginInputUserName" name="username">
-    
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Hasło</label>
-                <input type="password" class="form-control" id="loginInputPassword" name="password">
-            </div>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="loginCheckboxRemember">
-                <label class="form-check-label" for="loginCheckboxRemember">Pamiętaj mnie</label>
-            </div>
-            <button id="loginButtonSubmit" class="btn btn-primary">Zaloguj</button>
-        </form>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Hasło</label>
+            <input type="password" class="form-control" id="loginInputPassword" name="password">
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="loginCheckboxRemember">
+            <label class="form-check-label" for="loginCheckboxRemember">Pamiętaj mnie</label>
+        </div>
+        <button id="loginButtonSubmit" class="btn btn-primary">Zaloguj</button>
+        <div class="login_error_message">
+
+        </div>
     </div>
 
     <script>
@@ -28,7 +33,7 @@
         const loginInputUserName = document.getElementById('loginInputUserName')
         const loginInputPassword = document.getElementById('loginInputPassword')
         const loginCheckboxRemember = document.getElementById('loginCheckboxRemember')
-
+        const loginErrorMessage = document.querySelector('.login_error_message')
 
         loginBtnSubmit.addEventListener('click', (e)=>{
 
@@ -50,6 +55,7 @@
             }) 
             .then((data)=>{
                 console.log(data)
+                loginErrorMessage.textContent = data.error
             })
             .catch(e=>{
                 console.log(e)
