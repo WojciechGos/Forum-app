@@ -3,6 +3,7 @@ const router = express.Router();
 const {loginGet} = require('../controllers/LoginController')
 const passport = require('passport')
 const upload = require('../config/multer').upload
+const getUserPermission = require('../Utils/UserPermissions')
 
 router.get('/login', loginGet);
 
@@ -23,8 +24,8 @@ router.post('/login', upload.none(), (req, res, next) => {
             res.json({succes: false, error: info.message})
         }else{
             console.log('succes login')
-
-            res.render('index')
+            let userPermission = getUserPermission(user)
+            res.render('index', {userPermission: userPermission})
         }
     })(req, res, next)
 })

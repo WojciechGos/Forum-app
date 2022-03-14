@@ -41,7 +41,7 @@
         </button>
     
         
-        <% if(data.mainUser == null){ %> 
+        <% if(userPermission == null){ %> 
            
             <div class="row">
                 <div class="col d-flex align-items-center">
@@ -62,7 +62,7 @@
           
             <div class="row">
                 <div class="col d-flex align-items-center">
-                    <a href="/profil/<%= data.mainUser.name %> " class="nav-btn">Profil</a>
+                    <a href="/profil/<%= userPermission.user.name %> " class="nav-btn">Profil</a>
                 </div>
                 <div class="col d-flex align-items-center">
                     <a href="/logout" class="nav-btn">Wyloguj</a>
@@ -76,7 +76,7 @@
     
 </nav>
 
-<%- include('modal_tabs_login_register', {data:data})  %> 
+<%- include('modal_tabs_login_register')  %> 
 
 <div class="offcanvas offcanvas-end bg-dark" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
     <div class="offcanvas-header">
