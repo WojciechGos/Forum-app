@@ -9,7 +9,7 @@ function profilePut(req, res){
 }
 
 
-async function profileGet(req, res){
+function profileGet(req, res){
     const name = req.params.username
 
     if(req.params.username === req.user.name){

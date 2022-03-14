@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 
 function loginGet(req, res){
     try{
-        let userPermission = getUserPermission(req.user)
-        res.render('login', {userPermission: userPermission});
+
+        res.render('login', {userPermission: req.user});
     }catch(e){
         console.error(e)
     }

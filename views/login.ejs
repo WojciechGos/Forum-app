@@ -58,7 +58,12 @@
             }) 
             .then((data)=>{
                 console.log(data)
-                loginErrorMessage.textContent = data.error
+                if(data.succes){
+                    refreshPage()
+                }else{
+                    printErrorMessage(data.error)
+                }
+                
             })
             .catch(e=>{
                 console.log(e)
@@ -66,7 +71,12 @@
 
 
         })
-
+        function refreshPage(){
+            document.location.reload()
+        }
+        function printErrorMessage(error){
+            loginErrorMessage.textContent = error
+        }   
 
     </script>
 

@@ -9,22 +9,22 @@
     <title></title>
 </head>
 <body>
-    <%- include('navbar', {data:data})%> 
+    <%- include('navbar', {user:user})%> 
 
     <div class="container-fluid">
         <div class="row">
             <div class="col-3">
                 <div class="card" style="width: 18rem;">
-                   <%- data.user.image  %> 
+                
                 </div>
             </div>
             <div class="col-7">
-                <form action="/profil/<%= data.user.name %>?_method=PUT">
+                <form action="/profil/<%= user.name %>?_method=PUT">
                     <fieldset disabled>
                         <h1>Informacje o tobie</h1>
                         <div class="mb-3">
                             <label for="disabledTextInput" class="form-label">Nick</label>
-                            <input type="text" id="disabledTextInput" class="form-control" placeholder="<%= data.user.name %> ">
+                            <input type="text" id="disabledTextInput" class="form-control" placeholder="<%= user.name %> ">
                            
                         </div>
                         <div class="mb-3">
@@ -38,7 +38,7 @@
                   </form>
             </div>
             <div class="col-2">
-                <%- include('sidebar', {data:data})  %> 
+                <%- include('sidebar', {user:user})  %> 
             </div>
         
           

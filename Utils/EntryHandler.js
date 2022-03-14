@@ -222,7 +222,7 @@ module.exports.EntryReader = class EntryReader{
    
     async getEntryData(date, index, thread){   
         this.entry = await this._findEntryBy(date, index, thread)
-        console.log(`entry: ${this.entry}`)
+
         if(this.entry[0] === null || this.entry[0] === undefined)
             return{
                 succes: false,

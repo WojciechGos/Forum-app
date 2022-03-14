@@ -41,7 +41,7 @@
         </button>
     
         
-        <% if(userPermission == null){ %> 
+        <% if(user == null){ %> 
            
             <div class="row">
                 <div class="col d-flex align-items-center">
@@ -62,7 +62,7 @@
           
             <div class="row">
                 <div class="col d-flex align-items-center">
-                    <a href="/profil/<%= userPermission.user.name %> " class="nav-btn">Profil</a>
+                    <a href="/profil/<%= user.name %> " class="nav-btn">Profil</a>
                 </div>
                 <div class="col d-flex align-items-center">
                     <a href="/logout" class="nav-btn">Wyloguj</a>
