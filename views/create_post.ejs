@@ -76,10 +76,10 @@
         // replace innerHTML or smt
         // I use editableDiv.innerHtml because I want have acces 
         // to image's sources.
-        // formData.append('content', editableDiv.innerHTML)
-        // formData.append('title', title.value)
-        // formData.append('thread', thread.textContent)
-        // console.log(formData.values)
+        formData.append('content', editableDiv.innerHTML)
+        formData.append('title', title.value)
+        formData.append('thread', thread.textContent)
+        console.log(formData.values)
 
         fetch("entry", {
             method: 'post',
