@@ -1,15 +1,11 @@
-const Data = require('../Utils/Data')
+
 
 
 
 function homePageGet(req, res){
-    Data.getMainUserData(req.user)
-        .then((data)=>{
-            res.render('index', {data: data})
-        })
-        .catch((e)=>{
-            console.error(e)
-        })
+    console.log(`homepage user: ${req.user}`)
+
+    res.render('index', {user: req.user})
 }
 
 module.exports.homePageGet = homePageGet

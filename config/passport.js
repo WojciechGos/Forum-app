@@ -4,6 +4,7 @@ const User = require('../model/User')
 const passport = require('passport')
 
 async function authenticateUser(username, password, done){
+
     
     let user
     try{
@@ -13,18 +14,18 @@ async function authenticateUser(username, password, done){
     }
     console.log(user)
 
+
     if(user == null){
-        return done(null, false, {message: 'No user with that name'});
+        return done(null, false, {message: 'Nie ma użytkownika z taką nazwą'});
     }
     try{
         if(await bcrypt.compare(password, user.password)){
-            console.log('user logged')
             return done(null, user);
         }else{
-            return done(null, false, {message: 'Password incorrect'})
+            return done(null, false, {message: 'Niepoprawne hasło'})
         }
     }catch(err){
-         return done(err);
+        return done(err);
     }
 }
 

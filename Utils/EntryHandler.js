@@ -4,6 +4,7 @@ let uniqID = require('uniqid')
 const pathOS = require('path')
 const jsdom = require('jsdom')
 const Entry = require('../model/Entry')
+const User= require('../model/User')
 const Thread = require('../model/Thread')
 
 
@@ -216,45 +217,114 @@ module.exports.EntryWriter = class EntryWriter{
 
 
 module.exports.EntryReader = class EntryReader{
-   
-    async getEntry(date, index, thread){   
-        try{
-            let entry = await this._findEntryBy(date, index, thread)
-            console.log(`getEntry: ${entry}`)
-//  
-            // console.log(entry.content_path)
-            let file_path = `${entry[0].content_path}/${entry[0].file_name}`
-            console.log(`getEntry: ${file_path}`)
-            return pathOS.resolve(file_path)  
-        }
-        catch(e){
-            console.error(e)
-        }
-    }
+    entry
+
   
+   
+    async getEntryData(date, index, thread){   
+        this.entry = await this._findEntryBy(date, index, thread)
 
-    _findEntryBy(date, index, thread){
-        console.log(thread)
-        if (thread == null)
-            return  Entry.find({ date: { $lt: date } })
-            .skip(index)
-            .limit(1)
-            .then(result=>{
-                return result;
-            })
-                
-        else
-            return  Entry.find({ 
-                date: { $lt: date }, 
-                thread: thread })
-            .skip(index)
-            .limit(1)
-            .then(result=>{
-                return result
-            })
+        if(this.entry[0] === null || this.entry[0] === undefined)
+            return{
+                succes: false,
+                info: "Nie ma więcej postów"
+            }
+
+        let title = this._getTitle()
+        let user_data = await this._getUserData()
+        let thread_entry = this._getThread()
+        let date_entry = this._getDate()
+        let file_path = this._getFilePath()
+        let content = await this._getContent(file_path)
+
+        return {
+            succes: true,
+            title: title,
+            user_name: user_data.name,
+            user_profil: user_data.profileImage,
+            thread: thread_entry,
+            date: date_entry,
+            content: content
+        }
+        
+    
+
+    }
+    async _findEntryBy(date, index, thread) {
+
+        if (thread == 'none')
+            return Entry.find({ 
+                date: { $lt: new Date(date) } })
+                .skip(index)
+                .sort({$natural:-1})
+                .limit(1)
+                .then(result => {
+                    return result;
+                })
+        else{
+            let threadId = await this._getThreadId(this._getThread)
+            // console.log(`threadId ${threadId}`)
+            return Entry.findOne({
+                date: { $lt: new Date(date) },
+                thread: threadId
+                })
+                .skip(index)
+                .limit(1)
+                .then(result => {
+                    return result
+                })
+        }
     }
 
 
+
+    _getThreadId(thread){
+        return new Promise((resolve, reject)=>{
+            Thread.findOne({title : thread})
+            .then(result=>{
+                resolve(result)
+            })
+            .catch(e=>{
+                reject(e)
+            })
+        })
+    }
+
+    _getContent(file_path){
+        return new Promise((resolve, reject)=>{
+            fs.readFile(file_path, (err, content) => {
+                if (err) {
+                    reject(`error cannot read content of file ${file_path}`)
+                }
+                resolve(content.toString())
+            })
+        })
+    }
+
+    _getFilePath(){
+        let file_path = `${this.entry[0].content_path}/${this.entry[0].file_name}`
+        return pathOS.resolve(file_path) 
+
+    }
+
+    _getUserData(){
+        return User.findOne({ userId: this.entry[0].userId})
+    }
+
+    _getTitle(){
+        return this.entry[0].title
+    }
+    
+    _getDate(){
+        return this.entry[0].date
+    }
+
+    _getThread(){
+        return this.entry[0].thread
+    }
+    
+
+ 
 
 
 

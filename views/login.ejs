@@ -1,21 +1,83 @@
-<body>
+<style type="text/css" scoped>
+
+    .login_error_message{
+        color: red;
+    }
+
+
+</style>
+
     <div class="container">
-        <form method="POST" action="/Login">
-            <div class="mb-3">
-                <label for="UserName" class="form-label">Nazwa Użytkownika</label>
-                <input type="text" class="form-control" id="inputUserName" name="username">
-            
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Hasło</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" name="password">
-            </div>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Pamiętaj mnie</label>
-            </div>
-            <button type="submit" class="btn btn-primary">Zaloguj</button>
-        </form>
+        <div class="mb-3">
+            <label for="UserName" class="form-label">Nazwa Użytkownika</label>
+            <input type="text" class="form-control" id="loginInputUserName" name="username">
+        
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Hasło</label>
+            <input type="password" class="form-control" id="loginInputPassword" name="password">
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="loginCheckboxRemember">
+            <label class="form-check-label" for="loginCheckboxRemember">Pamiętaj mnie</label>
+        </div>
+        <div class="d-flex justify-content-between">
+
+            <button id="loginButtonSubmit" class="btn btn-primary">Zaloguj</button>
+            <div class="login_error_message">
+        </div>
+
+        </div>
     </div>
-</body>
-</html>
+
+    <script>
+
+        const loginBtnSubmit = document.getElementById('loginButtonSubmit')
+        const loginInputUserName = document.getElementById('loginInputUserName')
+        const loginInputPassword = document.getElementById('loginInputPassword')
+        const loginCheckboxRemember = document.getElementById('loginCheckboxRemember')
+        const loginErrorMessage = document.querySelector('.login_error_message')
+
+        loginBtnSubmit.addEventListener('click', (e)=>{
+
+            let loginFormData = new FormData()
+
+            loginFormData.append('username', loginInputUserName.value)
+            loginFormData.append('password', loginInputPassword.value)
+            loginFormData.append('rememberMe', loginCheckboxRemember.checked)
+            console.log(loginFormData.values)
+            for (var value of loginFormData.values()) {
+                console.log(value);
+            }
+            fetch('login',{
+                method: 'POST',
+                body: loginFormData
+            })
+            .then((res)=>{
+                return res.json()
+            }) 
+            .then((data)=>{
+                console.log(data)
+                if(data.succes){
+                    refreshPage()
+                }else{
+                    printErrorMessage(data.error)
+                }
+                
+            })
+            .catch(e=>{
+                console.log(e)
+            })
+
+
+        })
+        function refreshPage(){
+            document.location.reload()
+        }
+        function printErrorMessage(error){
+            loginErrorMessage.textContent = error
+        }   
+
+    </script>
+
+

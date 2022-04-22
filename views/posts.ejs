@@ -1,103 +1,115 @@
-<div class="card container-fluid">
-    <div class="card-body">
-        <div class="row d-flex">
-            <div class="col">
-                Wojtek Gos
-            </div>
-            <div class="col">
-                r/motoryzacja
-            </div>
-            <div class="col">data: 25/08/2021</div>   
-        </div>
-        <div class="row my-4">
-            <h4 class="card-title mb-3">Opel Astra klasa g</h4>
-            <p class="card-text"> 
-            <div>POST 1</div>
-           
-                    
-            </p>    
-        </div>
-        <div class="row">
-            <p class="card-text">komentarze</p>
-        </div>
-    </div>
-    
-</div>
+
+
+<style type="text/css" scoped>
+    .entry_finish_container{
+        width: 100%;
+        height: 10vh;
+        display: flex;
+        justify-content: center;
+    }
+</style>
+
+
 
 <script>
     
-    // function addEntry(username, thread, date, entry){
-        // let entry = 
-        // `<div class="card container-fluid">
-        //         <div class="card-body">
-        //             <div class="row d-flex">
-        //                 <div class="col">
-        //                     ${username}
-        //                 </div>
-        //                 <div class="col">
-        //                     ${thread}
-        //                 </div>
-        //                 <div class="col">
-        //                     ${date}
-        //                 </div>
-        //             </div>
-        //             <div class="row my-4">
-        //                 <h4 class="card-title mb-3">Opel Astra klasa g</h4>
-        //                 <p class="card-text">
-        //                     ${entry}
-                            
-        //                 </p>
-        //             </div>
-        //             <div class="row">
-        //                 <p class="card-text">komentarze</p>
-        //             </div>
-        //         </div>
-
-        //     </div>`
-        
-    // }
- 
-  
+    
     const post_container = document.querySelector('.post-container')
-
-    let index= 0
-    let thread = null
-    let currentDate = Date.now()
-
-
-
+    let block = false
+    let errorShow = false
+    let index= 2
+    let filter_thread = null
+    let currentDate = new Date().toISOString()
+    initEntries()
     document.addEventListener('scroll', e=>{
+        let entry
         
-        if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
-
-            // for(let i=index; i<5; ++i){
-            //     fetchAndAddEntry(currentDate, i, 'undefined')
-            // }
-            // index += 5
+        if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight && !isFetchBlocked()) {
+            for(let i=index; i<index+5; ++i){
+                fetchAndAddEntry(i)
+            }
+            index += 5;
+        }else if(((window.innerHeight + window.scrollY) >= document.body.scrollHeight) && isFetchBlocked()){
+            showError()
         }
 
     })
+    function blockFetch(){
+        block = true
+    }
+    function isFetchBlocked(){
+        return block
+    }
+    function initEntries(){
+        for(let i=0; i<4; ++i){
+            fetchAndAddEntry(i)
+        }
+        index = 4
+        
+    }
+    function isErrorShowed(){
+        return errorShow
+    }
+    function showError(){
+        if(!isErrorShowed()){
+            errorShow = true
+            post_container.innerHTML += `
+            <div class="entry_finish_container" >
+                <button class="btn btn-primary">
+                    załaduj post
+                    </button>
+                    </div>
+                    `
+        }
+    }
 
-    function addEntry(data){
-        let entry =
-            `<div class="card container-fluid">
+    async function fetchAndAddEntry(i){
+        if(isFetchBlocked()){
+            return 
+        }
+        entry = await fetchEntry(currentDate, i, 'none')
+        
+        console.log('recognizing ')
+        if (entry.succes) {
+            console.log("adding entry")
+            addEntry(entry)
+        }
+        else {
+            console.log('there is no entry')
+            blockFetch()
+            
+            // show info with button that enable refreshing info 
+        }
+    }
+
+
+  
+    function addEntry(data) {
+        let user_name = data.user_name
+        let thread = data.thread
+        let date = data.date
+        let title = data.title
+        let content = data.content
+            let entry =
+                `<div class="card container-fluid">
                 <div class="card-body">
                     <div class="row d-flex">
                         <div class="col">
-                             Wojtek Gos
+                            ${user_name}
                         </div>
                         <div class="col">
-                           r/motoryzacja
+                            ${thread}
                         </div>
                         <div class="col">
-                           data: 25/08/2021
+                            ${date}
                         </div>
                     </div>
                     <div class="row my-4">
-                        <h4 class="card-title mb-3">Opel Astra klasa g</h4>
+                        <h4 class="card-title mb-3">
+                            ${title}
+                        </h4>
                         <p class="card-text">
-                            ${data}
-                            
+                            ${content}   
                         </p>
                     </div>
                     <div class="row">
@@ -106,33 +118,30 @@
                 </div>
 
             </div>`
-    
         post_container.innerHTML += entry
-         
     }
 
-    function fetchAndAddEntry(date, index, thread) {
-        let link = `entry/${date}/${index}/${thread}`
-        fetch(link, {
-            method: "GET"
+    
 
+ 
+
+    function fetchEntry(date, index, thread) {
+        console.log(date)
+        let link = `entry/${date}/${index}/${thread}`
+        return fetch(link, {
+            method: "GET"
         })
         .then(response => {
-            return response.text()
+            return response.json()
         })
         .then(data => {
-            console.log(data)
-            addEntry(data)
+            return data
         })
         .catch(e => {
             console.error(e)
 
         })
     }
-    
-        
-    // fetchAndAddEntry('2022-02-14T10:44:55.501Z', 0, 'undefined')
+
 
 </script>
-        
-   
