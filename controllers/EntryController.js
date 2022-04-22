@@ -2,6 +2,8 @@ const Entry = require('../model/Entry')
 const EntryWriter = require('../Utils/EntryHandler').EntryWriter
 function entryPost(req, res){
   
+
+    console.log("createing new POST")
     
     if(req.user != null){
 

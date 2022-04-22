@@ -4,9 +4,9 @@ const path = require('path')
 
 async function imageApiGet(req, res){
 
+    
 
     let imagePath = `${__dirname}/../../Data/Entries/${req.params.folder}/${req.params.name}`
-
 
     res.sendFile(path.resolve(imagePath))
 }
