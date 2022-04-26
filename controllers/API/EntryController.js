@@ -3,11 +3,11 @@ const fs = require('fs')
 
 async function entryGet(req, res){
     
-    console.log("entryGET: Starts searching for an entry")
     const date = new Date(req.params.date).toISOString()
     const index = parseInt(req.params.index,10)
     const thread = req.params.thread
-
+    
+    console.log(`entryGET: Starts searching for an entry nr: ${index}`)
     
 
     const entry = new EntryReader()

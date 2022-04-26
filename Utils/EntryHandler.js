@@ -223,7 +223,8 @@ module.exports.EntryReader = class EntryReader{
    
     async getEntryData(date, index, thread){   
         this.entry = await this._findEntryBy(date, index, thread)
-
+        console.log(`entry nr ${index}: ${this.entry}`)
+        
         if(this.entry[0] === null || this.entry[0] === undefined)
             return{
                 succes: false,
@@ -237,15 +238,21 @@ module.exports.EntryReader = class EntryReader{
         let file_path = this._getFilePath()
         let content = await this._getContent(file_path)
 
-        return {
-            succes: true,
-            title: title,
-            user_name: user_data.name,
-            user_profil: user_data.profileImage,
-            thread: thread_entry,
-            date: date_entry,
-            content: content
-        }
+        if(title || user_data || thread_entry || date_entry || file_path || content)
+            return {
+                succes: true,
+                title: title,
+                user_name: user_data.name,
+                user_profil: user_data.profileImage,
+                thread: thread_entry,
+                date: date_entry,
+                content: content
+            }
+        else
+            return {
+                succes: false,
+                info: "nie można pobrać postu"
+            }
         
     
 
@@ -261,6 +268,9 @@ module.exports.EntryReader = class EntryReader{
                 .then(result => {
                     return result;
                 })
+                .catch(e => {
+                    return null
+                })
         else{
             let threadId = await this._getThreadId(this._getThread)
             // console.log(`threadId ${threadId}`)
@@ -272,6 +282,9 @@ module.exports.EntryReader = class EntryReader{
                 .limit(1)
                 .then(result => {
                     return result
+                })
+                .catch(e =>{
+                    return null
                 })
         }
     }
@@ -292,16 +305,18 @@ module.exports.EntryReader = class EntryReader{
 
     _getContent(file_path){
         return new Promise((resolve, reject)=>{
+            console.log(`file path: ${file_path}`)
             fs.readFile(file_path, (err, content) => {
-                if (err) {
+                if (err || content== null) 
                     reject(`error cannot read content of file ${file_path}`)
-                }
-                resolve(content.toString())
+                else
+                    resolve(content.toString())
             })
         })
     }
 
     _getFilePath(){
+        console.log(``)
         let file_path = `${this.entry[0].content_path}/${this.entry[0].file_name}`
         return pathOS.resolve(file_path) 
 
