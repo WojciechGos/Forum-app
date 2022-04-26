@@ -1,11 +1,13 @@
-if(process.env.NODE_ENV !== 'production') {
-    require('dotenv').config()
-}
+
 
 const fs = require('fs')
 
 const express = require('express');
 const app = express();
+
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
 
 const passport = require('passport');
 const flash = require('express-flash')
