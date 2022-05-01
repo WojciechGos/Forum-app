@@ -93,7 +93,7 @@ module.exports.EntryWriter = class EntryWriter{
         It works because objects are passes by reference.
     **/
     _injectNewNameToImageSource(name, image){
-        image.getElementsByTagName('img')[0].src = "http://localhost:5000/image/"+this.directoryId+'/'+name
+        image.getElementsByTagName('img')[0].src = `${process.env.DOMAIN}/image/${this.directoryId}/${name}`
     }
     _isDataUri(image){
         if (image.substr(0, 5) == "data:")
