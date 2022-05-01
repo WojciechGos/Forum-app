@@ -1,20 +1,8 @@
-const {MongoClient} = require('mongodb')
+const mongoose = require('mongoose')
 
 async function connection(){
-    const uri = process.env.DB_URL
-    const client = new MongoClient(uri)
-
-    try{
-        await client.connect()
-        console.log("connected to db")
-    }
-    catch(e){
-        console.error(e)
-    }
-    // finally{
-    //     await client.close()
-    // }
+    mongoose.connect(process.env.DB_URL)
+    console.log("connected to db")
 }
-
 
 module.exports.connection = connection
