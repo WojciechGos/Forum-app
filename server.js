@@ -5,7 +5,7 @@ const fs = require('fs')
 const express = require('express');
 const app = express();
 
-if (process.env.NODE_ENV !== 'development') {
+if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 
@@ -15,7 +15,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')
 const methodOverride = require('method-override')
 
-require('./config/database').connection
+require('./config/database').connection().catch(console.error)
 
 const sessionStore = MongoStore.create({
     mongoUrl: process.env.DB_URL

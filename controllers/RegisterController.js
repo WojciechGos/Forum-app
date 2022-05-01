@@ -39,9 +39,9 @@ async function createUser(req, res){
 async function registerPost(req, res){
 
     try{
-        const user = User.findOne({name: req.body.name})
+        const user = await User.findOne({name: req.body.name})
         if(user != null){
-            createUser(req, res)
+            await createUser(req, res)
         }else{
 
         }
