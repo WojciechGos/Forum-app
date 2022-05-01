@@ -74,4 +74,6 @@ app.get('/logout', (req, res)=>{
     res.redirect('/')
 });
 
-app.listen(5000)
+app.listen(8080, ()=>{
+    console.log('listening on port 8080')
+})
