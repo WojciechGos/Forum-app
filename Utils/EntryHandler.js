@@ -184,7 +184,7 @@ module.exports.EntryWriter = class EntryWriter{
 
     _createDirectoryPath() {
         console.log("EntryHandle: createDirectoryPath")
-        let path = `${__dirname}/../Data/Entries/` + this.directoryId
+        let path = `/Data/Entries/` + this.directoryId
         fs.mkdir(path, (e) => {
             if (e)
                 console.error(e)
