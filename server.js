@@ -56,7 +56,7 @@ const profileRouter = require('./routes/ProfileRouter')
 const imageCreatorRouter = require('./routes/ImageCreatorRouter')
 const entryRouter = require('./routes/EntryRouter')
 const threadRouter = require('./routes/ThreadRouter')
-const apiImageRouter = require('./routes/API/imageRouter')
+const apiImageRouter = require('./routes/API/ImageRouter')
 const apiEntryRouter = require('./routes/API/EntryRouter')
 
 app.use(apiImageRouter)
