@@ -23,9 +23,6 @@ module.exports.EntryWriter = class EntryWriter{
         this.req_data = data
         this.dom = new jsdom.JSDOM(data.content)
         this.path= this._createDirectoryPath();  
-
-        // let id = mongoose.Types.ObjectId(user._id);
-        // console.log(id.valueOf())
     }
 
     /*
@@ -72,11 +69,11 @@ module.exports.EntryWriter = class EntryWriter{
     */
     async _saveIntoDataBase(contentID){
         try{
-            let thread =  await Thread.findOne({title:this.req_data.title})
+           
             
             const entry = new Entry({
                 title: this.req_data.title,
-                thread: thread,
+                thread: this.req_data.thread,
                 content_path: pathOS.normalize(this.path),
                 file_name: `${contentID}.html`
             })
@@ -183,7 +180,6 @@ module.exports.EntryWriter = class EntryWriter{
     **/
 
     _createDirectoryPath() {
-        console.log("EntryHandle: createDirectoryPath")
         let path = `${__dirname}/../Data/Entries/` + this.directoryId
         fs.mkdir(path, (e) => {
             if (e)
@@ -223,7 +219,6 @@ module.exports.EntryReader = class EntryReader{
    
     async getEntryData(date, index, thread){   
         this.entry = await this._findEntryBy(date, index, thread)
-        console.log(`entry nr ${index}: ${this.entry}`)
         
         if(this.entry[0] === null || this.entry[0] === undefined)
             return{
@@ -273,7 +268,6 @@ module.exports.EntryReader = class EntryReader{
                 })
         else{
             let threadId = await this._getThreadId(this._getThread)
-            // console.log(`threadId ${threadId}`)
             return Entry.findOne({
                 date: { $lt: new Date(date) },
                 thread: threadId
@@ -305,7 +299,6 @@ module.exports.EntryReader = class EntryReader{
 
     _getContent(file_path){
         return new Promise((resolve, reject)=>{
-            console.log(`file path: ${file_path}`)
             fs.readFile(file_path, (err, content) => {
                 if (err || content== null) 
                     reject(`error cannot read content of file ${file_path}`)
@@ -316,7 +309,6 @@ module.exports.EntryReader = class EntryReader{
     }
 
     _getFilePath(){
-        console.log(``)
         let file_path = `${this.entry[0].content_path}/${this.entry[0].file_name}`
         return pathOS.resolve(file_path) 
 

@@ -5,9 +5,7 @@ const fs = require('fs')
 const express = require('express');
 const app = express();
 
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config()
-}
+
 
 const passport = require('passport');
 const flash = require('express-flash')
@@ -15,11 +13,24 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')
 const methodOverride = require('method-override')
 
-require('./config/database').connection().catch(console.error)
 
-const sessionStore = MongoStore.create({
-    mongoUrl: process.env.DB_URL
-})
+
+let sessionStore
+
+if (process.env.NODE_ENV === 'production') {
+    require('./config/database').connection().catch(console.error)
+    sessionStore = MongoStore.create({
+        mongoUrl: process.env.DB_URL_PRODUCTION
+    })
+}
+else{
+
+    require('dotenv').config()
+    require('./config/database').connection().catch(console.error)
+    sessionStore = MongoStore.create({
+        mongoUrl: process.env.DB_URL_DEVELOPMENT
+    })
+}
 
 
 
@@ -58,6 +69,7 @@ const entryRouter = require('./routes/EntryRouter')
 const threadRouter = require('./routes/ThreadRouter')
 const apiImageRouter = require('./routes/API/ImageRouter')
 const apiEntryRouter = require('./routes/API/EntryRouter')
+const apiThreadRouter = require('./routes/API/ThreadRouter')
 
 app.use(apiImageRouter)
 app.use(loginRouter)
@@ -68,6 +80,7 @@ app.use(imageCreatorRouter)
 app.use(entryRouter)
 app.use(threadRouter)
 app.use(apiEntryRouter)
+app.use(apiThreadRouter)
 
 app.get('/logout', (req, res)=>{
     req.logOut()

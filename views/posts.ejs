@@ -1,5 +1,3 @@
-
-
 <style type="text/css" scoped>
     .entry_finish_container{
         width: 100%;
@@ -9,11 +7,7 @@
     }
 </style>
 
-
-
 <script>
-    
-    
     const post_container = document.querySelector('.post-container')
     let block = false
     let errorShow = false
@@ -68,22 +62,16 @@
             return 
         }
         entry = await fetchEntry(currentDate, i, 'none')
-        
-        console.log('recognizing ')
+
         if (entry.succes) {
-            console.log("adding entry")
             addEntry(entry)
         }
         else {
-            console.log('there is no entry')
             blockFetch()
-            
             // show info with button that enable refreshing info 
         }
     }
 
-
-  
     function addEntry(data) {
         let user_name = data.user_name
         let thread = data.thread
@@ -121,10 +109,6 @@
         post_container.innerHTML += entry
     }
 
-    
-
- 
-
     function fetchEntry(date, index, thread) {
         console.log(date)
         let link = `entry/${date}/${index}/${thread}`
@@ -142,6 +126,5 @@
 
         })
     }
-
 
 </script>

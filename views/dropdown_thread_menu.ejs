@@ -7,31 +7,64 @@
     }
 </style>
 
-
-
 <div class="dropdown" >
     <a class="btn btn-secondary dropdown-toggle" 
     href="#"  
     role="button" id="dropdownMenuLink" 
     data-bs-toggle="dropdown"
     aria-expanded="false">
-    Wybierz Wątek
+        Wybierz Wątek
     </a>
 
-<ul class="dropdown-menu modal_dropdown" aria-labelledby="dropdownMenuLink">
-    <li class="list_element dropdown_item">Motoryzacja</li>
-    <li class="list_element dropdown_item">Wędkarstwo</li>
-    <li class="list_element dropdown_item">Un0</li>
-</ul>
+    <ul class="dropdown-menu modal_dropdown" aria-labelledby="dropdownMenuLink" id="threads_menu">
+    </ul>
 </div>
+
 <script>
-    const menu = document.querySelectorAll('.list_element')
-    const display_selected_thread = document.querySelector('.dropdown-toggle')
-    menu.forEach(item=>{
-        item.addEventListener('click', (e)=>{
-            display_selected_thread.textContent = item.textContent
+
+    let display_selected_thread = document.querySelector('.dropdown-toggle')
+    let threadsMenu = document.getElementById('threads_menu')
+    let menu = []
+
+    fetch_threads()
+   
+
+   
+
+    
+    function add_threads(threads){
+        for(let i=0; i<threads.length; ++i){
+            threadsMenu.innerHTML+= `<li class="list_element dropdown_item">${threads[i].title}</li>`
+        }
+        let menu = document.querySelectorAll('.list_element')
+        menu.forEach(item => {
+            item.addEventListener('click', (e) => {
+                console.log(`thread item: ${item.textContent}`)
+                display_selected_thread.textContent = item.textContent
+            })
         })
-    })
+    }
+    function fetch_threads(){
+        fetch('thread',{
+            method: "GET"
+        })
+        .then(response=>{
+            return response.json()
+        })
+        .then(json=>{
+            console.log(`thread response: ${json.data}`)
+            if (json.succes) {
+                add_threads(json.data)
+            } else {
+
+            }
+        })
+        .catch(e=>{
+            console.error(e)
+        })
+    }
+
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"

@@ -9,7 +9,7 @@ const entrySchema = new Schema({
         type: String,
     },
     thread: {
-        type: mongoose.Types.ObjectId,
+        type: String,
     },
     date:{
         type: Date,

@@ -8,6 +8,6 @@ const fileStorageEngine = multer.diskStorage({
         cb(null, file.fieldname + '-' + req.user.name)
     }
 })
-const upload = multer({storage:fileStorageEngine._handleFile, limits: {fieldSize : 25*1024*1024}})
+const upload = multer({storage:fileStorageEngine._handleFile, limits: {fieldSize : 25*1024*1024}})  // 25mb
 
 module.exports.upload = upload

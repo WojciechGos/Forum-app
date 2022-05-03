@@ -29,16 +29,6 @@
             <div><br></div>
             <div><br></div>
             <div><br></div>
-            <div><br></div>
-            <div><br></div>
-            <div><br></div>
-            <div><br></div>
-            <div><br></div>
-            <div><br></div>
-            <div><br></div>
-            <div><br></div>
-            <div><br></div>
-            <div><br></div>
         </div>
     </div>
     <button  class="btn btn-primary" id="entrySubmitBtnId">Dodaj Post</button>
@@ -50,7 +40,7 @@
 <script>
     let editableDiv = document.getElementById('createPostForm')
     let title = document.getElementById('input_title')
-    let thread = document.getElementById('dropdownMenuLink')
+    let thread = document.querySelector('.dropdown-toggle')
     const entrySubmit = document.getElementById('entrySubmitBtnId')
     
     editableDiv.addEventListener('paste', (e)=>{
@@ -69,17 +59,13 @@
 
 
     entrySubmit.addEventListener('click', function(event){
-        console.log("pyk")
         let formData = new FormData()
 
-        // security problem 
-        // replace innerHTML or smt
-        // I use editableDiv.innerHtml because I want have acces 
-        // to image's sources.
         formData.append('content', editableDiv.innerHTML)
         formData.append('title', title.value)
         formData.append('thread', thread.textContent)
-        console.log(formData.values)
+        console.log(`thread: ${thread.textContent}`)
+        console.log(formData.values())
 
         fetch("entry", {
             method: 'post',
