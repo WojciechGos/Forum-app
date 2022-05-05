@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
     
     <title>Forum</title>
@@ -14,68 +16,387 @@
 
     <div class="wrapper">
         
-    <%- include('navbar', {user: user}) %>
+        <%- include('navbar', {user: user}) %>
     
-
-    
-    <div class="row">
 
         
-    
-        <div class="col-md-10">
-    
-            <div class="post-container" id="posts">
-                <button id="btn-ex"></button>
-                <p>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
-                        aria-expanded="false" aria-controls="collapseExample" id="collapse-btn">
-                        Button with data-bs-target
-                    </button>
-                </p>
-                <div class="collapse" id="collapseExample">
-                    <div class="card card-body">
-                        Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user
-                        activates the relevant trigger.
-                    </div>
+        <div class="row">
+
+            
+        
+            <div class="col-md-10">
+                
+        
+                <div class="post-container" id="posts">
+                    <%- include('posts') %>
                 </div>
-                <%- include('posts') %>
+            </div>
+        
+            <div class="col-md-2 hide-md">
+                <%- include('sidebar') %>
             </div>
         </div>
-    
-        <div class="col-md-2 hide-md">
-            <%- include('sidebar') %>
-        </div>
+            <%- include('modal_create_post_thread') %>
+        
+        
+        
     </div>
-    <%- include('modal_create_post_thread') %>
-    
-    
-    
-        </div>
 
         
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
-    integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
-    crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous">
 
 
-    console.log("stm")
-    console.log("stm")
-    console.log("stm")
-    console.log("stm")
-    console.log("stm")
-    var myCollapse = document.getElementById('collapse-btn')
 
-  console.log(myCollapse)
+ <script>
+     ///////////////////////// post////////////////////////////
+     window.onload= function(){
 
-        var bsCollapse = new bootstrap.Collapse(myCollapse, {
-            toggle: false
+     
+    const btnTmp = document.getElementById("btnTmp")
+    console.log(btnTmp)
+
+    btnTmp.addEventListener('click', event => {
+
+        console.log('click')
+        console.log('123')
+        btnTmp.classList.add("asd")
+    })
+
+
+    const post_container = document.querySelector('.post-container')
+    let block = false
+    let errorShow = false
+    let index = 2
+    let filter_thread = null
+    let currentDate = new Date().toISOString()
+    initEntries()
+    document.addEventListener('scroll', e => {
+        let entry
+
+        if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight && !isFetchBlocked()) {
+            for (let i = index; i < index + 5; ++i) {
+                fetchAndAddEntry(i)
+            }
+            index += 5;
+        } else if (((window.innerHeight + window.scrollY) >= document.body.scrollHeight) && isFetchBlocked()) {
+            showError()
+        }
+
+    })
+    function blockFetch() {
+        block = true
+    }
+    function isFetchBlocked() {
+        return block
+    }
+    function initEntries() {
+        for (let i = 0; i < 4; ++i) {
+            fetchAndAddEntry(i)
+        }
+        index = 4
+
+    }
+    function isErrorShowed() {
+        return errorShow
+    }
+    function showError() {
+        // if (!isErrorShowed()) {
+        //     errorShow = true
+        //     post_container.innerHTML += `
+        //     <div class="entry_finish_container" >
+        //         <button class="btn btn-primary">
+        //             załaduj post
+        //             </button>
+        //             </div>
+        //             `
+        // }
+    }
+
+    async function fetchAndAddEntry(i) {
+        if (isFetchBlocked()) {
+            return
+        }
+        entry = await fetchEntry(currentDate, i, 'none')
+
+        if (entry.succes) {
+            // addEntry(entry)
+        }
+        else {
+            blockFetch()
+            // show info with button that enable refreshing info 
+        }
+    }
+
+    function addEntry(data) {
+        let user_name = data.user_name
+        let thread = data.thread
+        let date = data.date
+        let title = data.title
+        let content = data.content
+        let entry =
+            `<div class="card container-fluid">
+                <div class="card-body">
+                    <div class="row d-flex">
+                        <div class="col">
+                            ${user_name}
+                        </div>
+                        <div class="col">
+                            ${thread}
+                        </div>
+                        <div class="col">
+                            ${date}
+                        </div>
+                    </div>
+                    <div class="row my-4">
+                        <h4 class="card-title mb-3">
+                            ${title}
+                        </h4>
+                        <p class="card-text">
+                            ${content}   
+                        </p>
+                    </div>
+                    <div class="row">
+                        komentarze
+                 
+                    </div>
+
+            </div>`
+        post_container.innerHTML += entry
+    }
+
+    function fetchEntry(date, index, thread) {
+        console.log(date)
+        let link = `entry/${date}/${index}/${thread}`
+        return fetch(link, {
+            method: "GET"
         })
+            .then(response => {
+                return response.json()
+            })
+            .then(data => {
+                return data
+            })
+            .catch(e => {
+                console.error(e)
+
+            })
+            
+    }
+
+//     ////////////////////// create post ///////////////////////////
+
+    let editableDiv = document.getElementById('createPostForm')
+    let title = document.getElementById('input_title')
+    let thread = document.querySelector('.dropdown-toggle')
+    const entrySubmit = document.getElementById('entrySubmitBtnId')
+
+    editableDiv.addEventListener('paste', (e) => {
+
+        // setTimeout is for getElements after paste, not in pending
+        setTimeout(() => {
+            let collection = editableDiv.getElementsByTagName('img')
+            for (item of collection) {
+                item.classList.add('img-fluid')
+                console.log(item)
+            }
+
+        }, 0)
+    })
+
+
+    entrySubmit.addEventListener('click', function (event) {
+        let formData = new FormData()
+
+        formData.append('content', editableDiv.innerHTML)
+        formData.append('title', title.value)
+        formData.append('thread', thread.textContent)
+        console.log(`thread: ${thread.textContent}`)
+        console.log(formData.values())
+
+        fetch("entry", {
+            method: 'post',
+            body: formData
+        }).then(response => {
+            return response.json()
+        }).then(json => {
+            console.log(json)
+        }).catch(error => {
+            console.error(error)
+        })
+    })
+/////////////////////////////////////////// create thread //////////////////////////////////////
+
+    const threadForm = document.getElementById('threadFormId')
+    const threadTitle = document.getElementById('threadTitleId')
+    const threadSubmitBtn = document.getElementById('threadSubmitBtnId')
+    const threadDescription = document.getElementById('threadDescriptionId')
+
+    threadSubmitBtn.addEventListener('click', (e) => {
+
+        console.log('im comin')
+        let threadFormData = new FormData()
+
+        threadFormData.append('title', threadTitle.value)
+        threadFormData.append('description', threadDescription.value)
+
+        fetch("thread", {
+            method: 'post',
+            body: threadFormData
+        })
+            .then(response => {
+                return response.json()
+            })
+            .then(json => {
+                console.log(json)
+
+                // window.location.href = json.redirect
+
+            })
+            .catch(error => {
+                console.error(error)
+            })
+    })
+    
+//     ///////////////////////////////////////// dropdown thread menu ///////////////////////////////////////////
+
+
+    let display_selected_thread = document.querySelector('.dropdown-toggle')
+    let threadsMenu = document.getElementById('threads_menu')
+    let menu = []
+
+    fetch_threads()
+
+
+
+
+
+    function add_threads(threads) {
+        for (let i = 0; i < threads.length; ++i) {
+            threadsMenu.innerHTML += `<li class="list_element dropdown_item">${threads[i].title}</li>`
+        }
+        let menu = document.querySelectorAll('.list_element')
+        menu.forEach(item => {
+            item.addEventListener('click', (e) => {
+                display_selected_thread.textContent = item.textContent
+            })
+        })
+    }
+    function fetch_threads() {
+        fetch('thread', {
+            method: "GET"
+        })
+            .then(response => {
+                return response.json()
+            })
+            .then(json => {
+                if (json.succes) {
+                    add_threads(json.data)
+                } else {
+
+                }
+            })
+            .catch(e => {
+                console.error(e)
+            })
+    }
+
+////////////////////////////////////////////////// login //////////////////////////////////////////////////////////////////////////
+
+    const loginBtnSubmit = document.getElementById('loginButtonSubmit')
+    const loginInputUserName = document.getElementById('loginInputUserName')
+    const loginInputPassword = document.getElementById('loginInputPassword')
+    const loginCheckboxRemember = document.getElementById('loginCheckboxRemember')
+    const loginErrorMessage = document.querySelector('.login_error_message')
+
+    loginBtnSubmit.addEventListener('click', (e) => {
+
+        let loginFormData = new FormData()
+
+        loginFormData.append('username', loginInputUserName.value)
+        loginFormData.append('password', loginInputPassword.value)
+        loginFormData.append('rememberMe', loginCheckboxRemember.checked)
+        console.log(loginFormData.values)
+        for (var value of loginFormData.values()) {
+            console.log(value);
+        }
+        fetch('login', {
+            method: 'POST',
+            body: loginFormData
+        })
+            .then((res) => {
+                return res.json()
+            })
+            .then((data) => {
+                console.log(data)
+                if (data.succes) {
+                    refreshPage()
+                } else {
+                    printErrorMessage(data.error)
+                }
+
+            })
+            .catch(e => {
+                console.log(e)
+            })
+
+
+    })
+    function refreshPage() {
+        document.location.reload()
+    }
+    function printErrorMessage(error) {
+        loginErrorMessage.textContent = error
+    }   
+
+/////////////////////////////////////////////// register //////////////////////////////////////////////////////
+
+    const passwordInput = document.getElementById('InputPasswordRegister');
+    const passwordInputRepeat = document.getElementById('InputPasswordRepeatRegister');
+    const newSeedInput = document.getElementById('newSeedInput')
+    const newSeedButton = document.getElementById('newSeedButton')
+    const avatarWrapper = document.getElementById('avatarWrapper')
+
+    passwordInput.addEventListener('change', () => {
+        console.log(passwordInput.value)
+    });
+
+    passwordInputRepeat.addEventListener('keyup', () => {
+        console.log(passwordInputRepeat.value);
+    });
+
+    function getImage() {
+
+
+    }
+
+    newSeedButton.addEventListener('click', () => {
+        let seed = newSeedInput.value
+        if (seed == "") {
+            seed = "seed"
+        }
+        console.log(seed)
+        fetch(`http://localhost:5000/imageCreator/${seed}`)
+            .then(async (res) => {
+
+                try {
+                    avatarWrapper.innerHTML = await res.text()
+                } catch (e) {
+                    console.error(e)
+                }
+
+            })
+            .catch((e) => {
+                console.error(e)
+            })
+    })  
+ }
+
+
 </script>
 
-
-  
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
    
 </body>
 </html>
