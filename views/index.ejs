@@ -12,6 +12,7 @@
     <title>Forum</title>
 </head>
 <body>
+<<<<<<< HEAD
  
 
     <div class="wrapper">
@@ -27,6 +28,12 @@
             <div class="col-md-10">
                 
         
+=======
+    <div class="wrapper">     
+        <%- include('navbar', {user: user}) %>
+        <div class="row">
+            <div class="col-md-10">
+>>>>>>> development
                 <div class="post-container" id="posts">
                     <%- include('posts') %>
                 </div>
@@ -36,182 +43,13 @@
                 <%- include('sidebar') %>
             </div>
         </div>
-            <%- include('modal_create_post_thread') %>
-        
-        
-        
+        <%- include('modal_create_post_thread') %>
     </div>
 
-        
-
-
-
-
- <script>
-     ///////////////////////// post////////////////////////////
-     window.onload= function(){
-
-     
-    const btnTmp = document.getElementById("btnTmp")
-    console.log(btnTmp)
-
-    btnTmp.addEventListener('click', event => {
-
-        console.log('click')
-        console.log('123')
-        btnTmp.classList.add("asd")
-    })
-
-
-    const post_container = document.querySelector('.post-container')
-    let block = false
-    let errorShow = false
-    let index = 2
-    let filter_thread = null
-    let currentDate = new Date().toISOString()
-    initEntries()
-    document.addEventListener('scroll', e => {
-        let entry
-
-        if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight && !isFetchBlocked()) {
-            for (let i = index; i < index + 5; ++i) {
-                fetchAndAddEntry(i)
-            }
-            index += 5;
-        } else if (((window.innerHeight + window.scrollY) >= document.body.scrollHeight) && isFetchBlocked()) {
-            showError()
-        }
-
-    })
-    function blockFetch() {
-        block = true
-    }
-    function isFetchBlocked() {
-        return block
-    }
-    function initEntries() {
-        for (let i = 0; i < 4; ++i) {
-            fetchAndAddEntry(i)
-        }
-        index = 4
-
-    }
-    function isErrorShowed() {
-        return errorShow
-    }
-    function showError() {
-        // if (!isErrorShowed()) {
-        //     errorShow = true
-        //     post_container.innerHTML += `
-        //     <div class="entry_finish_container" >
-        //         <button class="btn btn-primary">
-        //             załaduj post
-        //             </button>
-        //             </div>
-        //             `
-        // }
-    }
-
-    async function fetchAndAddEntry(i) {
-        if (isFetchBlocked()) {
-            return
-        }
-        entry = await fetchEntry(currentDate, i, 'none')
-
-        if (entry.succes) {
-            // addEntry(entry)
-        }
-        else {
-            blockFetch()
-            // show info with button that enable refreshing info 
-        }
-    }
-
-    function addEntry(data) {
-        let user_name = data.user_name
-        let thread = data.thread
-        let date = data.date
-        let title = data.title
-        let content = data.content
-        let entry =
-            `<div class="card container-fluid">
-                <div class="card-body">
-                    <div class="row d-flex">
-                        <div class="col">
-                            ${user_name}
-                        </div>
-                        <div class="col">
-                            ${thread}
-                        </div>
-                        <div class="col">
-                            ${date}
-                        </div>
-                    </div>
-                    <div class="row my-4">
-                        <h4 class="card-title mb-3">
-                            ${title}
-                        </h4>
-                        <p class="card-text">
-                            ${content}   
-                        </p>
-                    </div>
-                    <div class="row">
-                        komentarze
-                 
-                    </div>
-
-            </div>`
-        post_container.innerHTML += entry
-    }
-
-    function fetchEntry(date, index, thread) {
-        console.log(date)
-        let link = `entry/${date}/${index}/${thread}`
-        return fetch(link, {
-            method: "GET"
-        })
-            .then(response => {
-                return response.json()
-            })
-            .then(data => {
-                return data
-            })
-            .catch(e => {
-                console.error(e)
-
-            })
-            
-    }
-
-//     ////////////////////// create post ///////////////////////////
-
-    let editableDiv = document.getElementById('createPostForm')
-    let title = document.getElementById('input_title')
-    let thread = document.querySelector('.dropdown-toggle')
-    const entrySubmit = document.getElementById('entrySubmitBtnId')
-
-    editableDiv.addEventListener('paste', (e) => {
-
-        // setTimeout is for getElements after paste, not in pending
-        setTimeout(() => {
-            let collection = editableDiv.getElementsByTagName('img')
-            for (item of collection) {
-                item.classList.add('img-fluid')
-                console.log(item)
-            }
-
-        }, 0)
-    })
-
-
-    entrySubmit.addEventListener('click', function (event) {
-        let formData = new FormData()
-
-        formData.append('content', editableDiv.innerHTML)
-        formData.append('title', title.value)
-        formData.append('thread', thread.textContent)
-        console.log(`thread: ${thread.textContent}`)
-        console.log(formData.values())
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+    integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
 
         fetch("entry", {
             method: 'post',

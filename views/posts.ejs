@@ -5,40 +5,156 @@
         display: flex;
         justify-content: center;
     }
+    .create-comment-form-wrapper{
+        display: none;
+    }
+    .create-comment-form-wrapper.show{
+        display: block;
+    }
 </style>
 
 
+<script>
 
 
-<button id="btnTmp">
-asdasd
-</button type="submit">
+    const post_container = document.querySelector('.post-container')
+    let block = false
+    let errorShow = false
+    let index= 2
+    let filter_thread = null
+    let currentDate = new Date().toISOString()
+    initEntries()
+    document.addEventListener('scroll', e=>{
+        let entry
+        
+        if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight && !isFetchBlocked()) {
+            for(let i=index; i<index+5; ++i){
+                fetchAndAddEntry(i)
+            }
+            index += 5;
+        }else if(((window.innerHeight + window.scrollY) >= document.body.scrollHeight) && isFetchBlocked()){
+            showError()
+        }
 
-<div class="card container-fluid">
-    <div class="card-body">
-        <div class="row d-flex">
-            <div class="col">
-               user
-            </div>
-            <div class="col">
-                wątek
-            </div>
-            <div class="col">
-                data
-            </div>
-        </div>
-        <div class="row my-4">
-            <h4 class="card-title mb-3">
-                tytul
-            </h4>
-            <p class="card-text">
-                kontent
-            </p>
-        </div>
-        <div class="row">
-            komentarze
+    })
 
-        </div>
+    document.addEventListener('click', function (e) {
+        if (e.target && e.target.id == 'comment-btn') {
+            let node = e.target.parentNode.childNodes[3]
+            console.log(node)
+            if(node.classList.contains('show')){
+                node.classList.remove('show')
+            }
+            else{
+                node.classList.add('show')
+            }
+        }
+    });
 
-    </div>
+    function blockFetch(){
+        block = true
+    }
+    function isFetchBlocked(){
+        return block
+    }
+    function initEntries(){
+        for(let i=0; i<4; ++i){
+            fetchAndAddEntry(i)
+        }
+        index = 4
+        
+    }
+    function isErrorShowed(){
+        return errorShow
+    }
+    function showError(){
+        if(!isErrorShowed()){
+            errorShow = true
+            post_container.innerHTML += `
+            <div class="entry_finish_container" >
+                <button class="btn btn-primary">
+                    załaduj post
+                    </button>
+                    </div>
+                    `
+        }
+    }
 
+    async function fetchAndAddEntry(i){
+        if(isFetchBlocked()){
+            return 
+        }
+        entry = await fetchEntry(currentDate, i, 'none')
+
+
+    function addEntry(data) {
+        let user_name = data.user_name
+        let thread = data.thread
+        let date = data.date
+        let title = data.title
+        let content = data.content
+        let entry =
+            `<div class="card container-fluid">
+                <div class="card-body">
+                    <div class="row d-flex">
+                        <div class="col">
+                            ${user_name}
+                        </div>
+                        <div class="col">
+                            ${thread}
+                        </div>
+                        <div class="col">
+                            ${date}
+                        </div>
+                    </div>
+                    <div class="row my-4">
+                        <h4 class="card-title mb-3">
+                            ${title}
+                        </h4>
+                        <p class="card-text">
+                            ${content}   
+                        </p>
+                    </div>
+                    <div class="row">  
+                        <div class="comment-wrapper d-flex flex-column align-items-end">
+                            <button class="btn btn-primary m-2" id="comment-btn">
+                                Dodaj komentarz
+                            </button>
+                            <div class="container create-comment-form-wrapper">
+                                <div class="mb-3">
+                                    <div class="container-fluid" style="width:100%;" id="createCommentForm" contenteditable="true" name="content">
+                                        <div><br></div>
+                                        <div><br></div>
+                                        <div><br></div>
+                                        <div><br></div>
+                                        <div><br></div>
+                                    </div>
+                                </div>
+                                <div class="m-2">
+                                    <button class="btn btn-primary" id="commnetSubmitBtnId">Wyślij</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>`
+        post_container.innerHTML += entry
+    }
+    
+    function fetchEntry(date, index, thread) {
+        console.log(date)
+        let link = `entry/${date}/${index}/${thread}`
+        return fetch(link, {
+            method: "GET"
+        })
+        .then(response => {
+            return response.json()
+        })
+        .then(data => {
+            return data
+        })
+        .catch(e => {
+            console.error(e)
+
+        })
+    }
+</script>
