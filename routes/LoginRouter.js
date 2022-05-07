@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {loginGet} = require('../controllers/LoginController')
 const passport = require('passport')
-const upload = require('../config/multer').upload
+const upload = require('../Utils/multer').upload
 
 
 router.get('/login', loginGet);

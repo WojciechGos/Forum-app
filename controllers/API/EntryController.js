@@ -13,7 +13,6 @@ async function entryGet(req, res){
     const entry = new EntryReader()
 
     let response = await entry.getEntryData(date, index, thread) 
-    console.log(response)
     res.json(response)
 }   
 

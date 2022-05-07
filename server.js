@@ -17,21 +17,20 @@ const methodOverride = require('method-override')
 
 let sessionStore
 
+
+require('dotenv').config()
+
 if (process.env.NODE_ENV === 'production') {
-    require('./config/database').connection().catch(console.error)
     sessionStore = MongoStore.create({
         mongoUrl: process.env.DB_URL_PRODUCTION
     })
 }
 else{
-
-    require('dotenv').config()
-    require('./config/database').connection().catch(console.error)
     sessionStore = MongoStore.create({
         mongoUrl: process.env.DB_URL_DEVELOPMENT
     })
 }
-
+require('./Utils/database').connection().catch(console.error)
 
 
 
@@ -52,7 +51,7 @@ app.use(session({
         maxAge: 1000*60*60*24 // 24h
     }   
 }))
-require('./config/passport')
+require('./Utils/passport')
 app.use(passport.initialize());
 app.use(passport.session());
 

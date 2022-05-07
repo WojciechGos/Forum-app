@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {registerGet, registerPost } = require('../controllers/RegisterController')
-const upload = require('../config/multer').upload
+const upload = require('../Utils/multer').upload
 
 router.get('/register', registerGet);
 

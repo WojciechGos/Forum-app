@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const entryPost = require('../controllers/EntryController').entryPost
-const upload = require('../config/multer').upload
+const upload = require('../Utils/multer').upload
 
 router.post('/entry', upload.none(), entryPost)
 

@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const upload = require('../config/multer').upload
+const upload = require('../Utils/multer').upload
 
 const threadPost = require('../controllers/ThreadController').threadPost
 
