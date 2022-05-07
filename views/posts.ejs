@@ -85,6 +85,19 @@
             return 
         }
         entry = await fetchEntry(currentDate, i, 'none')
+        
+        console.log('recognizing ')
+        if (entry.succes) {
+            console.log("adding entry")
+            addEntry(entry)
+        }
+        else {
+            console.log('there is no entry')
+            blockFetch()
+            
+            // show info with button that enable refreshing info 
+        }
+    }
 
 
     function addEntry(data) {
@@ -150,6 +163,7 @@
             return response.json()
         })
         .then(data => {
+            console.log(data)
             return data
         })
         .catch(e => {
@@ -157,4 +171,5 @@
 
         })
     }
+
 </script>
