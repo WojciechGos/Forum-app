@@ -39,7 +39,7 @@
         let menu = document.querySelectorAll('.list_element')
         menu.forEach(item => {
             item.addEventListener('click', (e) => {
-                console.log(`thread item: ${item.textContent}`)
+
                 display_selected_thread.textContent = item.textContent
             })
         })
@@ -52,7 +52,6 @@
             return response.json()
         })
         .then(json=>{
-            console.log(`thread response: ${json.data}`)
             if (json.succes) {
                 add_threads(json.data)
             } else {

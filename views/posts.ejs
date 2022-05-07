@@ -5,9 +5,18 @@
         display: flex;
         justify-content: center;
     }
+    .create-comment-form-wrapper{
+        display: none;
+    }
+    .create-comment-form-wrapper.show{
+        display: block;
+    }
 </style>
 
+
 <script>
+
+
     const post_container = document.querySelector('.post-container')
     let block = false
     let errorShow = false
@@ -28,6 +37,20 @@
         }
 
     })
+
+    document.addEventListener('click', function (e) {
+        if (e.target && e.target.id == 'comment-btn') {
+            let node = e.target.parentNode.childNodes[3]
+            console.log(node)
+            if(node.classList.contains('show')){
+                node.classList.remove('show')
+            }
+            else{
+                node.classList.add('show')
+            }
+        }
+    });
+
     function blockFetch(){
         block = true
     }
@@ -100,68 +123,31 @@
                             ${content}   
                         </p>
                     </div>
-                    <div class="row">
-                        
-                    <div class="accordion" id="accordionExample">
-                        <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingOne">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                            aria-expanded="false" aria-controls="collapseOne">
-                            Accordion Item #1
-                        </button>
-                    </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
-                        data-bs-parent="#accordionExample" style="">
-                        <div class="accordion-body">
-                            <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin
-                            adds the appropriate classes that we use to style each element. These classes control the overall
-                            appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom
-                            CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the
-                            <code>.accordion-body</code>, though the transition does limit overflow.
+                    <div class="row">  
+                        <div class="comment-wrapper d-flex flex-column align-items-end">
+                            <button class="btn btn-primary m-2" id="comment-btn">
+                                Dodaj komentarz
+                            </button>
+                            <div class="container create-comment-form-wrapper">
+                                <div class="mb-3">
+                                    <div class="container-fluid" style="width:100%;" id="createCommentForm" contenteditable="true" name="content">
+                                        <div><br></div>
+                                        <div><br></div>
+                                        <div><br></div>
+                                        <div><br></div>
+                                        <div><br></div>
+                                    </div>
+                                </div>
+                                <div class="m-2">
+                                    <button class="btn btn-primary" id="commnetSubmitBtnId">Wyślij</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                </div>
-                    </div>
-
             </div>`
         post_container.innerHTML += entry
     }
-    const btn_collapse = document.getElementById('collapse-btn')
-    const btn_ex = document.getElementById('btn-ex')
-     
-
-        btn_ex.addEventListener('click', (e) => {
-            console.log("im trying")
-            // if(open){
-            //     aria = false
-
-            //     open = false
-            // }   
-            // else{
-            //     aria = true
-            //     open = true
-            // }
-        })
-    console.log(btn_collapse)
-    console.log(btn_ex)
-    const aria = document.getElementById('collapse-btn').getAttribute('aria-expanded')
-    let open = true
     
-    btn_collapse.addEventListener('click', (e)=>{
-        console.log("im trying")
-        // if(open){
-        //     aria = false
-            
-        //     open = false
-        // }   
-        // else{
-        //     aria = true
-        //     open = true
-        // }
-    })
-    
-              
     function fetchEntry(date, index, thread) {
         console.log(date)
         let link = `entry/${date}/${index}/${thread}`

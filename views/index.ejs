@@ -10,69 +10,26 @@
     <title>Forum</title>
 </head>
 <body>
- 
-
-    <div class="wrapper">
-        
-    <%- include('navbar', {user: user}) %>
-    
-
-    
-    <div class="row">
-
-        
-    
-        <div class="col-md-10">
-    
-            <div class="post-container" id="posts">
-                <button id="btn-ex"></button>
-                <p>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
-                        aria-expanded="false" aria-controls="collapseExample" id="collapse-btn">
-                        Button with data-bs-target
-                    </button>
-                </p>
-                <div class="collapse" id="collapseExample">
-                    <div class="card card-body">
-                        Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user
-                        activates the relevant trigger.
-                    </div>
+    <div class="wrapper">     
+        <%- include('navbar', {user: user}) %>
+        <div class="row">
+            <div class="col-md-10">
+                <div class="post-container" id="posts">
+                    <%- include('posts') %>
                 </div>
-                <%- include('posts') %>
+            </div>
+        
+            <div class="col-md-2 hide-md">
+                <%- include('sidebar') %>
             </div>
         </div>
-    
-        <div class="col-md-2 hide-md">
-            <%- include('sidebar') %>
-        </div>
+        <%- include('modal_create_post_thread') %>
     </div>
-    <%- include('modal_create_post_thread') %>
-    
-    
-    
-        </div>
-
-        
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
     integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
     crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous">
-
-
-    console.log("stm")
-    console.log("stm")
-    console.log("stm")
-    console.log("stm")
-    console.log("stm")
-    var myCollapse = document.getElementById('collapse-btn')
-
-  console.log(myCollapse)
-
-        var bsCollapse = new bootstrap.Collapse(myCollapse, {
-            toggle: false
-        })
-</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
 
 
   
