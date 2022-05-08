@@ -6,6 +6,7 @@ const jsdom = require('jsdom')
 const Entry = require('../model/Entry')
 const User= require('../model/User')
 const Thread = require('../model/Thread')
+const { findOne } = require('../model/Entry')
 
 
 module.exports.EntryWriter = class EntryWriter{
@@ -23,15 +24,18 @@ module.exports.EntryWriter = class EntryWriter{
         this.req_data = data
         this.dom = new jsdom.JSDOM(data.content)
         this.path= this._createDirectoryPath();  
+        this.user = user
     }
-
     /*
-        save() is main function of EntryHandler.
         It's saves images and entry to folder
-        and all 
-
    **/
-    save() {
+    saveEntry(){
+        
+    }
+    saveComment(){
+
+    }
+    _save(folder) {
        
         let collection = this.dom.window.document.body
         
@@ -55,31 +59,21 @@ module.exports.EntryWriter = class EntryWriter{
                 }
             }
         }
-        // It's saves updated content (renamed sources of images)
-        // and saves necessary data into database
-        this._saveEntryContent(collection.innerHTML)
 
-
-     
-
+        this._saveIntoDataBase(collection.innerHTML)
+        // this._saveEntryContent(collection.innerHTML)
     }
-
-    /*
-
-    */
-    async _saveIntoDataBase(contentID){
+    async _saveIntoDataBase( content){
         try{
-           
-            
             const entry = new Entry({
+                userId: this.user._id,
                 title: this.req_data.title,
                 thread: this.req_data.thread,
-                content_path: pathOS.normalize(this.path),
-                file_name: `${contentID}.html`
+                directoryId: this.directoryId,
+                content: content
             })
             await entry.save()
             console.log("saved into db")
-
         }
         catch(e){
             console.error(e)
@@ -91,6 +85,7 @@ module.exports.EntryWriter = class EntryWriter{
     **/
     _injectNewNameToImageSource(name, image){
         image.getElementsByTagName('img')[0].src = `${process.env.DOMAIN}/image/${this.directoryId}/${name}`
+        console.log(`${process.env.DOMAIN}/image/${this.directoryId}/${name}`)
     }
     _isDataUri(image){
         if (image.substr(0, 5) == "data:")
@@ -122,14 +117,12 @@ module.exports.EntryWriter = class EntryWriter{
 
     async _saveImage(buffer, name) {
          
-        let destinationPath = `${this.path}/${name}`
+        let destinationPath = pathOS.resolve(`${this.path}/${name}`)
         fs.writeFile(destinationPath, buffer, (e) => {
             if (e)
                 console.error(e)
         })
     }
-
-
 
     _containImage(content){
         if(content.length != 0)
@@ -139,38 +132,16 @@ module.exports.EntryWriter = class EntryWriter{
 
     async _downloadImage(link) {
         try {
-
             return await fetch(link, {
                 method: 'GET'
             })
-                .then(async (response) => {
-                    return await response.buffer()
-                })
-
-        } catch (e) {
+            .then(async (response) => {
+                return await response.buffer()
+            })
+        } 
+        catch (e) {
             console.error(e)
         }
-    }
-
-
-    /*
-        Saves entries as html because then i can replace image source 
-        and use entry directy from this path without any modification
-        
-        Only one time i use it and I don't worry about it
-
-    **/
-
-    _saveEntryContent(content){
-        let contentID = uniqID()
-        let destinationPath = `${this.path}/${contentID}.html`
-        
-        fs.writeFile(destinationPath, content, (e)=>{
-            if(e) 
-                console.error(e)
-            else
-                this._saveIntoDataBase(contentID)
-        })
     }
 
     /* 
@@ -180,34 +151,35 @@ module.exports.EntryWriter = class EntryWriter{
     **/
 
     _createDirectoryPath() {
-        let path = `${__dirname}/../Data/Entries/` + this.directoryId
+        let path = pathOS.resolve(`${__dirname}/../Data/Entries/${this.directoryId}`)
         fs.mkdir(path, (e) => {
             if (e)
                 console.error(e)
+            else{
+                let tmp = pathOS.resolve(`${path}/Comments`)
+                fs.mkdir(tmp, (e) => {
+                    if (e)
+                        console.error(e)
+                })
+            }
         })
+       
         return path
     }
  
-
-
-
     /*
-
         Acquire extension of file. 
-
         It doesn't matter if source is url or base64 
-
     **/
 
     _getExtension(item) {
+
+        // todo: check if have webp extension
         if (item.slice(0, 5) == "data:") {
             return item.split(';')[0].split('/')[1]
         }
         return item.split('.').pop()
     }
-
-   
-    
 }
 
 
@@ -215,9 +187,7 @@ module.exports.EntryWriter = class EntryWriter{
 module.exports.EntryReader = class EntryReader{
     entry
 
-  
-   
-    async getEntryData(date, index, thread){   
+    async getEntry(date, index, thread){   
         this.entry = await this._findEntryBy(date, index, thread)
         
         if(this.entry[0] === null || this.entry[0] === undefined)
@@ -230,8 +200,8 @@ module.exports.EntryReader = class EntryReader{
         let user_data = await this._getUserData()
         let thread_entry = this._getThread()
         let date_entry = this._getDate()
-        let file_path = this._getFilePath()
-        let content = await this._getContent(file_path)
+        let content = this._getContent()
+        let commentLocalisation = this._getCommentLocalisation()
 
         if(title || user_data || thread_entry || date_entry || file_path || content)
             return {
@@ -241,7 +211,8 @@ module.exports.EntryReader = class EntryReader{
                 user_profil: user_data.profileImage,
                 thread: thread_entry,
                 date: date_entry,
-                content: content
+                content: content,
+                commentLocalisation: commentLocalisation
             }
         else
             return {
@@ -283,7 +254,9 @@ module.exports.EntryReader = class EntryReader{
         }
     }
 
-
+    _getCommentLocalisation(){
+        return this.entry[0].directoryId
+    }
 
     _getThreadId(thread){
         return new Promise((resolve, reject)=>{
@@ -297,25 +270,13 @@ module.exports.EntryReader = class EntryReader{
         })
     }
 
-    _getContent(file_path){
-        return new Promise((resolve, reject)=>{
-            fs.readFile(file_path, (err, content) => {
-                if (err || content== null) 
-                    reject(`error cannot read content of file ${file_path}`)
-                else
-                    resolve(content.toString())
-            })
-        })
+    _getContent(){
+        return this.entry[0].content
     }
 
-    _getFilePath(){
-        let file_path = `${this.entry[0].content_path}/${this.entry[0].file_name}`
-        return pathOS.resolve(file_path) 
 
-    }
-
-    _getUserData(){
-        return User.findOne({ userId: this.entry[0].userId})
+    async _getUserData(){
+        return await User.findById(this.entry[0].userId)
     }
 
     _getTitle(){
@@ -330,16 +291,4 @@ module.exports.EntryReader = class EntryReader{
         return this.entry[0].thread
     }
     
-
- 
-
-
-
 }
-
-
-
-
-
-
-

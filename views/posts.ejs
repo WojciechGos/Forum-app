@@ -40,7 +40,7 @@
 
     document.addEventListener('click', function (e) {
         if (e.target && e.target.id == 'comment-btn') {
-            let node = e.target.parentNode.childNodes[3]
+            let node = e.target.parentNode.parentNode.childNodes[3]
             console.log(node)
             if(node.classList.contains('show')){
                 node.classList.remove('show')
@@ -106,6 +106,7 @@
         let date = data.date
         let title = data.title
         let content = data.content
+        let commentLocalisation = data.commentLocalisation
         let entry =
             `<div class="card container-fluid">
                 <div class="card-body">
@@ -129,10 +130,15 @@
                         </p>
                     </div>
                     <div class="row">  
-                        <div class="comment-wrapper d-flex flex-column align-items-end">
-                            <button class="btn btn-primary m-2" id="comment-btn">
-                                Dodaj komentarz
-                            </button>
+                        <div class="comment-wrapper d-flex flex-column">
+                            <div class="d-flex justify-content-between">
+                                <button class="btn btn-primary m-2" id="comment-show-btn" data-commentLocalisation="${commentLocalisation}">
+                                    Pokaż komentarze
+                                </button>
+                                <button class="btn btn-primary m-2" id="comment-btn">
+                                    Dodaj komentarz
+                                </button>
+                            </div>
                             <div class="container create-comment-form-wrapper">
                                 <div class="mb-3">
                                     <div class="container-fluid" style="width:100%;" id="createCommentForm" contenteditable="true" name="content">

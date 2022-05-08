@@ -15,7 +15,11 @@ const entrySchema = new Schema({
         type: Date,
         default: Date.now()
     },
-    content_path: {
+    directoryId:{
+        type:String,
+    }
+    ,
+    content: {
         type: String,
     },
     file_name: String,

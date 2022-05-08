@@ -38,3 +38,42 @@
 
 
 
+<script>
+    let editableDiv = document.getElementById('createPostForm')
+    let title = document.getElementById('input_title')
+    let thread = document.getElementById('dropdownMenuLink')
+    const entrySubmit = document.getElementById('entrySubmitBtnId')
+
+    editableDiv.addEventListener('paste', (e) => {
+        // setTimeout is for getElements after paste, not in pending
+        setTimeout(() => {
+            let collection = editableDiv.getElementsByTagName('img')
+            for (item of collection) {
+                item.classList.add('img-fluid')
+                console.log(item)
+            }
+        }, 0)
+    })
+    entrySubmit.addEventListener('click', function (event) {
+        console.log("pyk")
+        let formData = new FormData()
+        // security problem 
+        // replace innerHTML or smt
+        // I use editableDiv.innerHtml because I want have acces 
+        // to image's sources.
+        formData.append('content', editableDiv.innerHTML)
+        formData.append('title', title.value)
+        formData.append('thread', thread.textContent)
+        console.log(formData.values)
+        fetch("entry", {
+            method: 'post',
+            body: formData
+        }).then(response => {
+            return response.json()
+        }).then(json => {
+            console.log(json)
+        }).catch(error => {
+            console.error(error)
+        })
+    })
+</script>
