@@ -15,7 +15,7 @@
 
 
 <script>
-
+    //////////////////////////////////////////////// Entries //////////////////////////////////////////
 
     const post_container = document.querySelector('.post-container')
     let block = false
@@ -38,18 +38,6 @@
 
     })
 
-    document.addEventListener('click', function (e) {
-        if (e.target && e.target.id == 'comment-btn') {
-            let node = e.target.parentNode.parentNode.childNodes[3]
-            console.log(node)
-            if(node.classList.contains('show')){
-                node.classList.remove('show')
-            }
-            else{
-                node.classList.add('show')
-            }
-        }
-    });
 
     function blockFetch(){
         block = true
@@ -85,16 +73,11 @@
             return 
         }
         entry = await fetchEntry(currentDate, i, 'none')
-        
-        console.log('recognizing ')
         if (entry.succes) {
-            console.log("adding entry")
             addEntry(entry)
         }
         else {
-            console.log('there is no entry')
-            blockFetch()
-            
+            blockFetch()   
             // show info with button that enable refreshing info 
         }
     }
@@ -150,7 +133,7 @@
                                     </div>
                                 </div>
                                 <div class="m-2">
-                                    <button class="btn btn-primary" id="commnetSubmitBtnId">Wyślij</button>
+                                    <button class="btn btn-primary" id="commnetSubmitBtnId" data-commentLocalisation="${commentLocalisation}">Wyślij</button>
                                 </div>
                             </div>
                         </div>
@@ -160,7 +143,6 @@
     }
     
     function fetchEntry(date, index, thread) {
-        console.log(date)
         let link = `entry/${date}/${index}/${thread}`
         return fetch(link, {
             method: "GET"
@@ -169,7 +151,6 @@
             return response.json()
         })
         .then(data => {
-            console.log(data)
             return data
         })
         .catch(e => {
@@ -177,5 +158,43 @@
 
         })
     }
+    /////////////////////////////////////////////////// comment ///////////////////////////////////////////////////////////////////
+
+    document.addEventListener('click', function (e) {
+        if (e.target && e.target.id == 'comment-btn') {
+            let node = e.target.parentNode.parentNode.childNodes[3]
+            if (node.classList.contains('show')) {
+                node.classList.remove('show')
+            }
+            else {
+                node.classList.add('show')
+            }
+        }
+        if(e.target && e.target.id == 'commnetSubmitBtnId'){
+            let commentLocalisation = e.target.getAttribute('data-commentLocalisation')
+            let commentformData = getCommentContent(e.target)
+            console.log(commentformData)
+            sendComment(commentLocalisation,commentformData)
+        }
+
+     
+    });
+    function getCommentContent(target){
+        let commentNode = target.parentNode.parentNode.childNodes[1].childNodes[1]
+        console.log(commentNode)
+        let commentformData = new FormData()
+        commentformData.append('content', commentNode.innerHTML)
+        return commentformData
+    }
+
+    function sendComment(commentLocalisation, commentformData){
+
+        fetch(`/comment/${commentLocalisation}`, {
+            method:"POST",
+            body: commentformData
+        })
+    }
+     
+
 
 </script>

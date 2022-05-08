@@ -6,7 +6,8 @@ const jsdom = require('jsdom')
 const Entry = require('../model/Entry')
 const User= require('../model/User')
 const Thread = require('../model/Thread')
-const { findOne } = require('../model/Entry')
+const Comment = require('../model/Comment')
+const mongoose = require('mongoose')
 
 
 module.exports.EntryWriter = class EntryWriter{
@@ -20,22 +21,51 @@ module.exports.EntryWriter = class EntryWriter{
         pass html content 
     **/
     constructor(data, user){
-        this.directoryId = uniqID()
+        
         this.req_data = data
         this.dom = new jsdom.JSDOM(data.content)
-        this.path= this._createDirectoryPath();  
         this.user = user
     }
     /*
         It's saves images and entry to folder
    **/
-    saveEntry(){
-        
+    async saveEntry(){
+        this.directoryId = uniqID()
+        this.path = this._createDirectoryPath(); 
+        let content = this._processContent()
+        await this._saveEntryIntoDataBase(content)
     }
-    saveComment(){
+    async saveComment(folder){
+        try{
+            this.directoryId = folder
+            this.path = this._getDirectoryPath()
+            let content = this._processContent()
+            let id = await this._saveCommentIntoDataBase(content)
+            this._updateArrayOfComments(id, folder)
+            return {succes : true, info: "Udało się dodać komentarz"}
+        }
+        catch(e){
+            console.error(e)
+            return {succes: false, info: "Nie można dodac komentarza"}
+        }
 
     }
-    _save(folder) {
+
+    async _updateArrayOfComments(id, folder){
+        Entry.updateOne(
+            {directoryId: folder},
+            {$push: {comment: [id]}},
+            function(err, result){
+                if(err)
+                    console.error(err)
+                else
+                    console.log("updated entry comment")
+            }
+        )
+    
+    }
+
+    _processContent() {
        
         let collection = this.dom.window.document.body
         
@@ -59,11 +89,13 @@ module.exports.EntryWriter = class EntryWriter{
                 }
             }
         }
-
-        this._saveIntoDataBase(collection.innerHTML)
-        // this._saveEntryContent(collection.innerHTML)
+        return collection.innerHTML
     }
-    async _saveIntoDataBase( content){
+    async _findEntryByFolderName(folder){
+
+    }
+
+    async _saveEntryIntoDataBase(content){
         try{
             const entry = new Entry({
                 userId: this.user._id,
@@ -73,19 +105,36 @@ module.exports.EntryWriter = class EntryWriter{
                 content: content
             })
             await entry.save()
-            console.log("saved into db")
+            console.log("saved entry into db")
         }
         catch(e){
             console.error(e)
         }
      
     }
+
+    async _saveCommentIntoDataBase(content){
+        let id = await  mongoose.Types.ObjectId();
+        try{
+            const comment = new Comment({
+                _id: id,
+                userId: this.user._id,
+                diretcoryId: this.directoryId,
+                content: content
+            })
+            await comment.save()
+            console.log('saved comment into db')
+            return id
+        }
+        catch(e){
+            console.error(e)
+        }
+    }
     /*
         It works because objects are passes by reference.
     **/
     _injectNewNameToImageSource(name, image){
         image.getElementsByTagName('img')[0].src = `${process.env.DOMAIN}/image/${this.directoryId}/${name}`
-        console.log(`${process.env.DOMAIN}/image/${this.directoryId}/${name}`)
     }
     _isDataUri(image){
         if (image.substr(0, 5) == "data:")
@@ -149,19 +198,15 @@ module.exports.EntryWriter = class EntryWriter{
         create Directory path for entry content and images
 
     **/
+    _getDirectoryPath(){
+        return pathOS.resolve(`${__dirname}/../Data/Entries/${this.directoryId}`)
+    }
 
     _createDirectoryPath() {
         let path = pathOS.resolve(`${__dirname}/../Data/Entries/${this.directoryId}`)
         fs.mkdir(path, (e) => {
             if (e)
                 console.error(e)
-            else{
-                let tmp = pathOS.resolve(`${path}/Comments`)
-                fs.mkdir(tmp, (e) => {
-                    if (e)
-                        console.error(e)
-                })
-            }
         })
        
         return path

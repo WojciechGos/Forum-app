@@ -22,9 +22,7 @@ const entrySchema = new Schema({
     content: {
         type: String,
     },
-    file_name: String,
     comment: Array
-
 });
 
 module.exports = mongoose.model('Entry', entrySchema )
