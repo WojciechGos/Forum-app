@@ -1,22 +1,13 @@
-
-
 const fs = require('fs')
-
 const express = require('express');
 const app = express();
-
-
-
 const passport = require('passport');
 const flash = require('express-flash')
 const session = require('express-session');
 const MongoStore = require('connect-mongo')
 const methodOverride = require('method-override')
 
-
-
 let sessionStore
-
 
 require('dotenv').config()
 
@@ -31,8 +22,6 @@ else{
     })
 }
 require('./Utils/database').connection().catch(console.error)
-
-
 
 app.set('view engine', 'ejs');
 
@@ -57,7 +46,6 @@ app.use(passport.session());
 
 app.use(express.static('views'));
 
-
 // routes
 const loginRouter = require('./routes/LoginRouter')
 const registerRouter = require('./routes/RegisterRouter')
@@ -70,6 +58,7 @@ const apiImageRouter = require('./routes/API/ImageRouter')
 const apiEntryRouter = require('./routes/API/EntryRouter')
 const apiThreadRouter = require('./routes/API/ThreadRouter')
 const commentRouter = require('./routes/CommentRouter')
+const apiCommentRouter = require('./routes/Api/CommentRouter')
 
 app.use(apiImageRouter)
 app.use(loginRouter)
@@ -82,6 +71,7 @@ app.use(threadRouter)
 app.use(apiEntryRouter)
 app.use(apiThreadRouter)
 app.use(commentRouter)
+app.use(apiCommentRouter)
 
 app.get('/logout', (req, res)=>{
     req.logOut()

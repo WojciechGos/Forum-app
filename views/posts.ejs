@@ -11,6 +11,14 @@
     .create-comment-form-wrapper.show{
         display: block;
     }
+    .error{
+        color: red;
+    }
+
+    .comment-wrapper.hide{
+        display: none;
+    }
+    
 </style>
 
 
@@ -33,7 +41,7 @@
             }
             index += 5;
         }else if(((window.innerHeight + window.scrollY) >= document.body.scrollHeight) && isFetchBlocked()){
-            showError()
+            showEntryError()
         }
 
     })
@@ -55,16 +63,15 @@
     function isErrorShowed(){
         return errorShow
     }
-    function showError(){
+    function showEntryError(){
         if(!isErrorShowed()){
             errorShow = true
             post_container.innerHTML += `
-            <div class="entry_finish_container" >
+            <div class="entry_finish_container">
                 <button class="btn btn-primary">
                     załaduj post
-                    </button>
-                    </div>
-                    `
+                </button>
+            </div>`
         }
     }
 
@@ -115,11 +122,11 @@
                     <div class="row">  
                         <div class="comment-wrapper d-flex flex-column">
                             <div class="d-flex justify-content-between">
-                                <button class="btn btn-primary m-2" id="comment-show-btn" data-commentLocalisation="${commentLocalisation}">
-                                    Pokaż komentarze
-                                </button>
-                                <button class="btn btn-primary m-2" id="comment-btn">
+                                <button class="btn btn-primary m-2" id="showCommentFormBtn">
                                     Dodaj komentarz
+                                </button>
+                                <button class="btn btn-primary m-2" id="commentShowBtn" data-commentLocalisation="${commentLocalisation}" data-showed="false" data-content-loaded="false">
+                                    Pokaż komentarze
                                 </button>
                             </div>
                             <div class="container create-comment-form-wrapper">
@@ -160,8 +167,10 @@
     }
     /////////////////////////////////////////////////// comment ///////////////////////////////////////////////////////////////////
 
-    document.addEventListener('click', function (e) {
-        if (e.target && e.target.id == 'comment-btn') {
+    
+
+    document.addEventListener('click', async function (e) {
+        if (e.target && e.target.id == 'showCommentFormBtn') {
             let node = e.target.parentNode.parentNode.childNodes[3]
             if (node.classList.contains('show')) {
                 node.classList.remove('show')
@@ -170,18 +179,50 @@
                 node.classList.add('show')
             }
         }
+
         if(e.target && e.target.id == 'commnetSubmitBtnId'){
             let commentLocalisation = e.target.getAttribute('data-commentLocalisation')
             let commentformData = getCommentContent(e.target)
-            console.log(commentformData)
             sendComment(commentLocalisation,commentformData)
         }
 
-     
+        if(e.target && e.target.id == 'commentShowBtn'){
+            let container = e.target.parentNode.parentNode
+            let commentLocalisation = e.target.getAttribute('data-commentLocalisation')
+            let showed = e.target.getAttribute('data-showed')
+            
+            console.log(showed)
+            if(showed === 'false'){
+                e.target.setAttribute('data-showed', 'true')
+
+                let isContentLoaded = e.target.getAttribute('data-content-loaded')
+                container.classList.remove('hide')
+
+                if(isContentLoaded === 'false'){
+                    let response = await getCommentsFromServer(commentLocalisation)
+                    e.target.setAttribute('data-content-loaded', "true")
+                    if (response.succes) {
+                        addAllCommentsToHtml(response.data, container)
+                    }
+                    else {
+                        showCommentError(container)
+                    }
+                }
+                // console.log("shr")
+                
+                // console.log(e.target.getAttribute('data-content-loaded'))
+            }
+            else{
+
+                e.target.setAttribute('data-showed', 'false')
+                container.classList.add('hide')
+            }
+        }
     });
+
+
     function getCommentContent(target){
         let commentNode = target.parentNode.parentNode.childNodes[1].childNodes[1]
-        console.log(commentNode)
         let commentformData = new FormData()
         commentformData.append('content', commentNode.innerHTML)
         return commentformData
@@ -194,7 +235,60 @@
             body: commentformData
         })
     }
-     
+
+    async function getCommentsFromServer(commentLocalisation){
+        return await fetch(`comment/${commentLocalisation}`, {
+            method: 'GET'
+        })
+        .then(response =>{
+            return response.json()
+        })
+        .then(data=>{
+            return data
+        })
+    }
+
+    function addAllCommentsToHtml(data, container) {
+        console.log('komentarze', data.comment)
+        data.comment.forEach(element => {
+            console.log('element', element)
+            addCommentsToHtml(element, container)
+        })
+    }          
+
+    function addCommentsToHtml(data, container){
+        let content = data.content
+        let user_name = data.userId.name
+        let date = data.date
+
+        let comment = 
+        `<div class="card container-fluid" >
+            <div class="card-body">
+                <div class="row d-flex">
+                    <div class="col">
+                        ${user_name}
+                    </div>
+                    <div class="col">
+                        ${date}
+                    </div>
+                </div>
+                <div class="row my-4">
+                    <p class="card-text">
+                        ${content}
+                    </p>
+                </div>
+            </div>
+        </div>`
+        container.innerHTML += comment
+    }
+
+    function showCommentError(container){
+        container.innerHTML += 
+            `<div class="error">
+                Nie można pobrac komentarzy
+            </div>`
+    }
+
 
 
 </script>
