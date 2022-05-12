@@ -14,8 +14,10 @@
     .error{
         color: red;
     }
-
-    .comment-wrapper.hide{
+    .comment-content-container{
+        display: block;
+    }
+    .comment-content-container.hide{
         display: none;
     }
     
@@ -142,6 +144,11 @@
                                 <div class="m-2">
                                     <button class="btn btn-primary" id="commnetSubmitBtnId" data-commentLocalisation="${commentLocalisation}">Wyślij</button>
                                 </div>
+                                <div class"comment-error">
+                                </div>
+                            </div>
+                            <div class="container comment-content-container">
+
                             </div>
                         </div>
                     </div>
@@ -187,11 +194,11 @@
         }
 
         if(e.target && e.target.id == 'commentShowBtn'){
-            let container = e.target.parentNode.parentNode
+            let container = e.target.parentNode.parentNode.childNodes[5]
             let commentLocalisation = e.target.getAttribute('data-commentLocalisation')
             let showed = e.target.getAttribute('data-showed')
             
-            console.log(showed)
+
             if(showed === 'false'){
                 e.target.setAttribute('data-showed', 'true')
 
@@ -201,16 +208,20 @@
                 if(isContentLoaded === 'false'){
                     let response = await getCommentsFromServer(commentLocalisation)
                     e.target.setAttribute('data-content-loaded', "true")
+
                     if (response.succes) {
-                        addAllCommentsToHtml(response.data, container)
+
+                        if(response.data.comment.length != 0){
+                            addAllCommentsToHtml(response.data, container)
+                        }
+                        else{
+                            showCommentError(e.target.parentNode, "Nie ma komentarzy")
+                        }
                     }
                     else {
-                        showCommentError(container)
+                        showCommentError(e.target.parentNode, "Nie można pobrac komentarzy")
                     }
                 }
-                // console.log("shr")
-                
-                // console.log(e.target.getAttribute('data-content-loaded'))
             }
             else{
 
@@ -282,10 +293,10 @@
         container.innerHTML += comment
     }
 
-    function showCommentError(container){
+    function showCommentError(container, text){
         container.innerHTML += 
             `<div class="error">
-                Nie można pobrac komentarzy
+                ${text}
             </div>`
     }
 

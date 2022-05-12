@@ -7,34 +7,21 @@ async function threadPost(req, res){
     try{
         let title = req.body.title
         let result = await Thread.findOne({title:title})
-        console.log(req.body)
 
         if(result == null){
-
             const thread = new Thread({
                 title: title,
                 description: req.body.description
             })
-
             await thread.save()
-            console.log("odp")
-            
-            // there is problem
-  
-            res.json({succes:true, info:"dodano wątek", redirect:'/'})
-        
+            res.json({succes:true, info:"Dodano wątek", redirect:'/'}) 
         }
-        else{
-            
-            res.status(200).send({info:"thread is exist"})
-
+        else{ 
+            res.status(200).send({info:"Wątek już istnieje"})
         }
-        
-       
     }
     catch(e){
         console.error(e)
-        res.status(500).send({error:"boo"})
     }
 }
 

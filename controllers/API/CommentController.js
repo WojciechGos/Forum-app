@@ -3,6 +3,8 @@ const Entry = require('../../model/Entry')
 
 
 async function commentGet(req, res){
+
+    
     let folder = req.params.folder
     let comments = await findCommentsByFolder(folder)
     console.log('comments', comments)

@@ -9,7 +9,9 @@ function entryPost(req, res){
         console.log("added new entry!")
         res.json({succes:true, info:"Dodano nowy post"})
     }
-    
+    else{
+        res.json({ succes: false, info: "Nie jesteś zalogowany" })
+    }
    
 }
 
