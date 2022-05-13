@@ -36,7 +36,7 @@
     initEntries()
     document.addEventListener('scroll', e=>{
         let entry
-        
+
         if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight && !isFetchBlocked()) {
             for(let i=index; i<index+5; ++i){
                 fetchAndAddEntry(i)
@@ -95,7 +95,7 @@
     function addEntry(data) {
         let user_name = data.user_name
         let thread = data.thread
-        let date = data.date
+        let date = data.date.split('T')[0]
         let title = data.title
         let content = data.content
         let commentLocalisation = data.commentLocalisation
@@ -141,10 +141,8 @@
                                         <div><br></div>
                                     </div>
                                 </div>
-                                <div class="m-2">
+                                <div class="m-2 d-flex justify-content-between">
                                     <button class="btn btn-primary" id="commnetSubmitBtnId" data-commentLocalisation="${commentLocalisation}">Wyślij</button>
-                                </div>
-                                <div class"comment-error">
                                 </div>
                             </div>
                             <div class="container comment-content-container">
@@ -190,7 +188,10 @@
         if(e.target && e.target.id == 'commnetSubmitBtnId'){
             let commentLocalisation = e.target.getAttribute('data-commentLocalisation')
             let commentformData = getCommentContent(e.target)
-            sendComment(commentLocalisation,commentformData)
+            let json = await sendComment(commentLocalisation,commentformData)
+            let container = e.target.parentNode
+            handleCommentResponse(json, container)
+
         }
 
         if(e.target && e.target.id == 'commentShowBtn'){
@@ -241,10 +242,31 @@
 
     function sendComment(commentLocalisation, commentformData){
 
-        fetch(`/comment/${commentLocalisation}`, {
+        return fetch(`/comment/${commentLocalisation}`, {
             method:"POST",
             body: commentformData
         })
+        .then(response=>{
+            return response.json()
+        })
+        .then(json =>{
+            return json
+        })
+    }
+
+    function handleCommentResponse(json, container){
+        if(json.succes){
+            container.innerHTML += 
+                `<div class="succes">
+                    Udało się dodać komentarz
+                </div>`
+        }
+        else{
+             container.innerHTML +=
+                `<div class="error">
+                    ${json.info}
+                </div>`
+        }
     }
 
     async function getCommentsFromServer(commentLocalisation){
@@ -260,9 +282,7 @@
     }
 
     function addAllCommentsToHtml(data, container) {
-        console.log('komentarze', data.comment)
         data.comment.forEach(element => {
-            console.log('element', element)
             addCommentsToHtml(element, container)
         })
     }          
@@ -270,7 +290,7 @@
     function addCommentsToHtml(data, container){
         let content = data.content
         let user_name = data.userId.name
-        let date = data.date
+        let date = data.date.split('T')[0]
 
         let comment = 
         `<div class="card container-fluid" >
