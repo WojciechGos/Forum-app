@@ -43,16 +43,12 @@
     passwordInputRepeat.addEventListener('keyup', () => {
         console.log(passwordInputRepeat.value);
     });
-    function getImage() {
-
+    function initImage(){
+        getImage('seed')
     }
-    newSeedButton.addEventListener('click', () => {
-        let seed = newSeedInput.value
-        if (seed == "") {
-            seed = "seed"
-        }
-        console.log(seed)
-        fetch(`http://localhost:5000/imageCreator/${seed}`)
+    initImage()
+    function getImage(seed) {
+        fetch(`imageCreator/${seed}`)
             .then(async (res) => {
                 try {
                     avatarWrapper.innerHTML = await res.text()
@@ -63,5 +59,13 @@
             .catch((e) => {
                 console.error(e)
             })
+    }
+    newSeedButton.addEventListener('click', () => {
+        let seed = newSeedInput.value
+        if (seed == "") {
+            seed = "seed"
+        }
+        console.log(seed)
+        getImage(seed)
     })
 </script>
