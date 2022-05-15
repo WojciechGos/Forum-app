@@ -20,6 +20,12 @@
     .comment-content-container.hide{
         display: none;
     }
+    .entry{
+        background-color: rgb(240, 239, 239);
+    }
+    .commentr{
+        background-color: rgb(240, 240, 240);
+    }
     
 </style>
 
@@ -70,9 +76,7 @@
             errorShow = true
             post_container.innerHTML += `
             <div class="entry_finish_container">
-                <button class="btn btn-primary">
-                    załaduj post
-                </button>
+                Nie ma więcej postów
             </div>`
         }
     }
@@ -100,7 +104,7 @@
         let content = data.content
         let commentLocalisation = data.commentLocalisation
         let entry =
-            `<div class="card container-fluid">
+            `<div class="card entry container-fluid my-5">
                 <div class="card-body">
                     <div class="row d-flex">
                         <div class="col">
@@ -293,7 +297,7 @@
         let date = data.date.split('T')[0]
 
         let comment = 
-        `<div class="card container-fluid" >
+        `<div class="card comment container-fluid" >
             <div class="card-body">
                 <div class="row d-flex">
                     <div class="col">
@@ -319,7 +323,4 @@
                 ${text}
             </div>`
     }
-
-
-
 </script>
