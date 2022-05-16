@@ -15,8 +15,8 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-3">
-                <div class="card" style="width: 18rem;">
-                
+                <div class="card" id="profile-wrapper" data-user-image="<%= user.profileImage %> " style="width: 18rem;">
+                    <img src="http://localhost:8080<%= user.profileImage %>" alt="">
                 </div>
             </div>
             <div class="col-7">
@@ -48,6 +48,23 @@
 
         </div>
     </div>
+    <script>
+        let profileWrapper = document.getElementById('profile-wrapper')
+        function getProfileImage(){
+            let url = profileWrapper.getAttribute('data-user-image')
+            fetch(`http://localhost:8080${url}`, {
+                method: 'GET'
+            })
+            .then( (response)=>{
+              console.log(response)
+            })
+            .catch(e=>{
+                console.error(e)
+            })
+        }
+        getProfileImage()
+
+    </script>
 
 </body>
 </html>

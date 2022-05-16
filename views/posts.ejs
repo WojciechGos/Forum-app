@@ -108,13 +108,13 @@
                 <div class="card-body">
                     <div class="row d-flex">
                         <div class="col">
-                            ${user_name}
+                            Użytkownik <a href="/profil/${user_name}">${user_name}</a>
                         </div>
                         <div class="col">
-                            ${thread}
+                            Wątek: ${thread}
                         </div>
                         <div class="col">
-                            ${date}
+                            Data dodania: ${date}
                         </div>
                     </div>
                     <div class="row my-4">
@@ -131,9 +131,11 @@
                                 <button class="btn btn-primary m-2" id="showCommentFormBtn">
                                     Dodaj komentarz
                                 </button>
-                                <button class="btn btn-primary m-2" id="commentShowBtn" data-commentLocalisation="${commentLocalisation}" data-showed="false" data-content-loaded="false">
-                                    Pokaż komentarze
-                                </button>
+                                <div>
+                                    <button class="btn btn-primary m-2" id="commentShowBtn" data-commentLocalisation="${commentLocalisation}" data-showed="false" data-content-loaded="false">
+                                        Pokaż komentarze
+                                    </button>
+                                </div>
                             </div>
                             <div class="container create-comment-form-wrapper">
                                 <div class="mb-3">
@@ -147,7 +149,7 @@
                                 </div>
                                 <div class="m-2 d-flex justify-content-between">
                                     <button class="btn btn-primary" id="commnetSubmitBtnId" data-commentLocalisation="${commentLocalisation}">Wyślij</button>
-                                </div>
+                                </div>                                   
                             </div>
                             <div class="container comment-content-container">
 
@@ -199,7 +201,8 @@
         }
 
         if(e.target && e.target.id == 'commentShowBtn'){
-            let container = e.target.parentNode.parentNode.childNodes[5]
+            let container = e.target.parentNode.parentNode.childNodes[3].childNodes[1]
+            console.log(container)
             let commentLocalisation = e.target.getAttribute('data-commentLocalisation')
             let showed = e.target.getAttribute('data-showed')
             
@@ -318,9 +321,11 @@
     }
 
     function showCommentError(container, text){
-        container.innerHTML += 
-            `<div class="error">
+        container.insertAdjacentHTML('beforebegin',  
+        `<div class="error">
                 ${text}
-            </div>`
+            </div>`)
+
+           
     }
 </script>

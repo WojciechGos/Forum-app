@@ -248,7 +248,7 @@ module.exports.EntryReader = class EntryReader{
         let content = this._getContent()
         let commentLocalisation = this._getCommentLocalisation()
 
-        if(title || user_data || thread_entry || date_entry || file_path || content)
+        if (title && user_data && thread_entry && date_entry  && content)
             return {
                 succes: true,
                 title: title,
@@ -321,7 +321,12 @@ module.exports.EntryReader = class EntryReader{
 
 
     async _getUserData(){
-        return await User.findById(this.entry[0].userId)
+        try{
+            return await User.findById(this.entry[0].userId)
+        }
+        catch(e){
+            console.error(e)
+        }
     }
 
     _getTitle(){

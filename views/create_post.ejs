@@ -90,7 +90,7 @@
         let container = entrySubmit.parentNode
         console.log(container)
         if(json.succes){
-            showInfo(container, 'Udało się dodać komentarz', 'succes')
+            showInfo(container, json.info, 'succes')
         }
         else{
             showInfo(container, json.info, 'error')

@@ -46,9 +46,9 @@
     function initImage(){
         getImage('seed')
     }
-    initImage()
+    initImage();
     function getImage(seed) {
-        fetch(`imageCreator/${seed}`)
+        fetch(`http://localhost:8080/imageCreator/${seed}`)
             .then(async (res) => {
                 try {
                     avatarWrapper.innerHTML = await res.text()

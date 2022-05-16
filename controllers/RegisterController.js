@@ -16,13 +16,13 @@ function registerGet(req, res){
 async function createUser(req, res){
     try{
         let path = `${__dirname}/../Data/Profiles/${req.body.username}-avatar.svg`
-    
+        let imageEndPoint = `/imageProfiles/${req.body.username}`
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         let user = new User({
             name : req.body.username,
             password : hashedPassword,
             joiningDate: Date.now(),
-            profileImage: path
+            profileImage: imageEndPoint
         });
 
         let svg = createProfileImage(req.body.avatar)
